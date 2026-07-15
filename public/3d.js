@@ -204,23 +204,21 @@
         rebuild();
       });
     }
-    // Photo on the spa top at TRUE scale: long side along the spa's long side,
-    // aspect ratio preserved (crops rather than stretches).
+    // Photo on the spa top: the shell found in the photo is laid over the full
+    // footprint, long side along the spa's long side. The shell region fills
+    // the top edge-to-edge - shells are near enough the same proportions that
+    // the tiny stretch is invisible, and no odd gaps show.
     function spaTopPlane(fx, fz, y) {
       const b = spaTopBox;
       const bw = b.u1 - b.u0, bh = b.v1 - b.v0;
       const photoAspect = (bw * b.iw) / (bh * b.ih);
       const swap = (photoAspect >= 1) !== (fx >= fz);
       const pw = swap ? fz : fx, ph = swap ? fx : fz;
-      const planeAspect = pw / ph;
       const t = spaTopTex;
       t.center.set(0.5, 0.5);
       t.rotation = 0;
-      let ru = bw, rv = bh;
-      if (photoAspect > planeAspect) ru = bw * planeAspect / photoAspect;
-      else rv = bh * photoAspect / planeAspect;
-      t.repeat.set(ru, rv);
-      t.offset.set(b.u0 + (bw - ru) / 2, b.v0 + (bh - rv) / 2);
+      t.repeat.set(bw, bh);
+      t.offset.set(b.u0, b.v0);
       const mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(pw, ph),
         new THREE.MeshBasicMaterial({ map: t, transparent: true }));
