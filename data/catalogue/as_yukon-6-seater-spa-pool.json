@@ -1,0 +1,17 @@
+{
+  "id": "as_yukon-6-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Yukon",
+  "type": "spa",
+  "seats": "6",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": 0.9,
+  "image": "as_yukon-6-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/family/yukon-6-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:18.207Z",
+  "updatedAt": "2026-07-09T21:29:18.207Z",
+  "docFile": "as_yukon-6-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/combos/barrel-yukon/alpine-spas-nz-2026-spa-yukon.pdf"
+}

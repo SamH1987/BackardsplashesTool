@@ -1,0 +1,17 @@
+{
+  "id": "as_nevada-3-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Nevada",
+  "type": "spa",
+  "seats": "3",
+  "lengthM": 2.13,
+  "widthM": 1.6,
+  "heightM": 0.87,
+  "image": "as_nevada-3-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/compact/nevada-3-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:09.307Z",
+  "updatedAt": "2026-07-09T21:29:09.307Z",
+  "docFile": "as_nevada-3-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/nevada/alpine-spas-nz-2026-spa-nevada.pdf"
+}

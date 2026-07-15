@@ -1,0 +1,16 @@
+{
+  "id": "tmpl_swim_spa",
+  "name": "Swim spa install",
+  "installType": "swim spa",
+  "description": "Swim spa (4-6m shell, 2-3 tonne dry): heavier crane, bigger slab, higher electrical load. Prices are ex GST and are YOUR defaults - edit them in Settings > Price templates.",
+  "lineItems": [
+    { "code": "SLAB", "description": "Engineered concrete slab, 150mm with SL82 mesh", "trade": "concrete", "unit": "m2", "defaultQty": 18, "unitPrice": 260, "supplier": "us", "prefill": "slab_area", "notes": "Engineer's detail required for shells over 2.5t" },
+    { "code": "CRANE", "description": "Crane hire - larger unit for swim spa lift", "trade": "crane", "unit": "each", "defaultQty": 1, "unitPrice": 2400, "supplier": "us", "prefill": "crane", "notes": "60t city crane typical for over-house lifts" },
+    { "code": "DELIV", "description": "Swim spa delivery, positioning and levelling", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 900, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "ELEC-RUN", "description": "Heavy-duty electrical run from switchboard, trenched", "trade": "electrical", "unit": "m", "defaultQty": 15, "unitPrice": 120, "supplier": "us", "prefill": "electrical_run", "notes": "" },
+    { "code": "ELEC-CONN", "description": "Dedicated 32-40A circuit, isolator, connect and test", "trade": "electrical", "unit": "each", "defaultQty": 1, "unitPrice": 2200, "supplier": "us", "prefill": null, "notes": "Switchboard upgrade quoted separately if needed" },
+    { "code": "ACCESS", "description": "Tight access allowance", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 850, "supplier": "us", "prefill": "tight_access", "notes": "" },
+    { "code": "HANDOVER", "description": "Fill, commission, water balance and handover walkthrough", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 550, "supplier": "us", "prefill": null, "notes": "" }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z"
+}

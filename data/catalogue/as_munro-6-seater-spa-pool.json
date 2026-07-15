@@ -1,0 +1,17 @@
+{
+  "id": "as_munro-6-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Munro",
+  "type": "spa",
+  "seats": "6",
+  "lengthM": 2.3,
+  "widthM": 2.3,
+  "heightM": 0.9,
+  "image": "as_munro-6-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/large/munro-6-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:21.739Z",
+  "updatedAt": "2026-07-09T21:29:21.739Z",
+  "docFile": "as_munro-6-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/munro/alpine-spas-nz-2026-spa-munro.pdf"
+}

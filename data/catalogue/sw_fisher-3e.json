@@ -1,0 +1,15 @@
+{
+  "id": "sw_fisher-3e",
+  "retailer": "Spa World",
+  "brand": "Fisher® Spas",
+  "name": "Fisher® 3E™ Spa",
+  "type": "spa",
+  "seats": "3",
+  "lengthM": 1.57,
+  "widthM": 2,
+  "heightM": 0.84,
+  "image": "sw_fisher-3e.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/fisher/fisher-3e/",
+  "createdAt": "2026-07-10T00:02:04.791Z",
+  "updatedAt": "2026-07-10T00:02:04.791Z"
+}

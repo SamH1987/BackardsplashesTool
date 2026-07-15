@@ -1,0 +1,36 @@
+# --- Live business data: never leaves this machine via git ---
+data/customers/*
+data/jobs/*
+data/quotes/*
+data/specs/*
+data/uploads/*
+data/private/
+config/private.json
+config/ssl/
+
+# keep the Mitchell sample job - it's the training example that ships with the system
+!data/customers/cust_sample.json
+!data/jobs/job_sample.json
+!data/quotes/quote_sample.json
+!data/specs/spec_sample_concrete.json
+!data/specs/spec_sample_plumbing.json
+!data/specs/spec_sample_electrical.json
+!data/uploads/sample_photo_backyard.png
+!data/uploads/sample_photo_backyard_annotated.png
+!data/uploads/sample_photo_access.png
+!data/uploads/sample_photo_access_annotated.png
+!data/uploads/sample_photo_switchboard.png
+!data/uploads/sample_sketch.png
+
+# --- Scraped retailer media: rebuild with scripts/build_catalogue.js etc. ---
+data/catalogue-images/
+data/catalogue-docs/
+data/decking-images/
+
+# --- Heavy local runtime: see README for setup ---
+runtime/
+node_modules/
+.models/
+
+.DS_Store
+nohup.out

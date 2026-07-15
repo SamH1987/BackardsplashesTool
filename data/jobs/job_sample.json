@@ -1,0 +1,177 @@
+{
+  "id": "job_sample",
+  "customerId": "cust_sample",
+  "title": "In-ground spa, back corner",
+  "siteAddress": "14 Waratah St, Baulkham Hills NSW 2153",
+  "installType": "in-ground spa",
+  "approvalStatus": "approved",
+  "stage": "survey_done",
+  "stageHistory": [
+    {
+      "stage": "lead",
+      "date": "2026-06-15T01:24:00.146Z"
+    },
+    {
+      "stage": "survey_done",
+      "date": "2026-06-27T01:24:00.146Z"
+    },
+    {
+      "stage": "quote_sent",
+      "date": "2026-06-30T01:24:00.146Z"
+    },
+    {
+      "stage": "accepted",
+      "date": "2026-07-05T01:24:00.146Z"
+    },
+    {
+      "stage": "contractors_booked",
+      "date": "2026-07-09T01:24:00.146Z"
+    },
+    {
+      "stage": "survey_done",
+      "date": "2026-07-12T01:25:08.160Z"
+    }
+  ],
+  "responsible": "Sam",
+  "nextAction": {
+    "text": "Confirm electrician rough-in day and tell Karen which morning the crane comes",
+    "due": "2026-07-13",
+    "who": "Sam"
+  },
+  "survey": {
+    "completedBy": "Sam",
+    "date": "2026-06-27",
+    "photos": [
+      {
+        "id": "photo_sample1",
+        "file": "sample_photo_backyard.png",
+        "annotatedFile": "sample_photo_backyard_annotated.png",
+        "caption": "Back yard from the gate - red box is the spa position, arrow is the access route"
+      },
+      {
+        "id": "photo_sample2",
+        "file": "sample_photo_access.png",
+        "annotatedFile": "sample_photo_access_annotated.png",
+        "caption": "Side path - narrowest point 1.05m at the gate"
+      },
+      {
+        "id": "photo_sample3",
+        "file": "sample_photo_switchboard.png",
+        "annotatedFile": null,
+        "caption": "Switchboard on garage wall - 18m cable run to spa position"
+      }
+    ],
+    "video": {
+      "file": null,
+      "transcript": "Righto, standing at the side gate looking down the path. Gate opening is one point zero five metres so it is tight, the shell will need to come over the house by crane. One step down at the gate then flat all the way to the back. Spa is going in the back left corner, one point eight metres off the rear boundary and one point two off the left side fence, so the equipment hatch faces the house. Shell is two point three by two point three, nine fifty kilos dry. Ground is clay under the lawn, slight fall towards the back fence. There is a lemon tree right where it goes, David said he will pull that out himself before we start. Water tap on the rear wall of the house about six metres away, sewer point is near the laundry, call it eight metres. Switchboard is on the garage side, about eighteen metres of cable run along the fence line. Overhead power comes in over the front yard, nothing over the back, so the crane lift path is clear. Karen wants the spa sitting flush with a deck they are building later, and they asked us to keep the concrete as small as we can. Budget they mentioned is around twenty five grand all in.",
+      "structuredNotes": {
+        "position": [
+          "Spa is going in the back left corner, one point eight metres off the rear boundary and one point two off the left side fence, so the equipment hatch faces the house.",
+          "Karen wants the spa sitting flush with a deck they are building later, and they asked us to keep the concrete as small as we can."
+        ],
+        "dimensions": [
+          "Shell is two point three by two point three, nine fifty kilos dry.",
+          "Ground is clay under the lawn, slight fall towards the back fence.",
+          "Switchboard is on the garage side, about eighteen metres of cable run along the fence line."
+        ],
+        "access": [
+          "Righto, standing at the side gate looking down the path.",
+          "Gate opening is one point zero five metres so it is tight, the shell will need to come over the house by crane.",
+          "One step down at the gate then flat all the way to the back."
+        ],
+        "hazards": [
+          "Water tap on the rear wall of the house about six metres away, sewer point is near the laundry, call it eight metres.",
+          "Overhead power comes in over the front yard, nothing over the back, so the crane lift path is clear."
+        ],
+        "requests": [
+          "Budget they mentioned is around twenty five grand all in."
+        ],
+        "general": [
+          "There is a lemon tree right where it goes, David said he will pull that out himself before we start."
+        ]
+      }
+    },
+    "sketch": {
+      "file": "sample_sketch.png"
+    },
+    "measurements": {
+      "spa": {
+        "lengthM": "2.3",
+        "widthM": "2.3",
+        "depthM": "0.95",
+        "weightKg": "950"
+      },
+      "excavation": {
+        "lengthM": "",
+        "widthM": "",
+        "depthM": ""
+      },
+      "slab": {
+        "lengthM": "",
+        "widthM": "",
+        "depthM": ""
+      },
+      "retainingWalls": [],
+      "decking": {
+        "lengthM": "",
+        "widthM": "",
+        "brand": ""
+      },
+      "plumbing": {
+        "drainagePitRequired": true,
+        "notes": "Pit to tie into existing stormwater near the laundry sewer point"
+      },
+      "electrical": {
+        "supplyAmps": "32 A",
+        "runM": "18"
+      },
+      "distances": [
+        {
+          "label": "rear boundary",
+          "metres": "1.8"
+        },
+        {
+          "label": "side boundary (left)",
+          "metres": "1.2"
+        },
+        {
+          "label": "house wall",
+          "metres": "4.5"
+        },
+        {
+          "label": "switchboard",
+          "metres": "18"
+        },
+        {
+          "label": "water tap",
+          "metres": "6"
+        },
+        {
+          "label": "sewer point",
+          "metres": "8"
+        }
+      ],
+      "accessWidthM": "1.05",
+      "stepLevelChanges": "One step down at the side gate, then flat to the back corner"
+    },
+    "conditions": {
+      "groundType": "clay",
+      "slope": "slight fall",
+      "obstacles": "Lemon tree on the spa position - owner is removing it before work starts",
+      "visibleUtilities": "Water tap on rear wall, sewer point near laundry, overhead power over FRONT yard only - back yard clear for the lift",
+      "craneNeeded": true,
+      "machineryNotes": "Crane sets up on the street and lifts the shell over the house. Lift path over the back yard is clear of wires. Council parking permit may be needed for the crane - check."
+    },
+    "wishlist": "Spa to sit flush with a future deck (deck by others, later). Keep the concrete apron as small as possible. Isolator switch out of sight from the outdoor table if it can be done.",
+    "budgetIndication": "Around $25,000 all in"
+  },
+  "documents": [],
+  "updatesLog": [
+    {
+      "date": "2026-07-06T01:24:00.146Z",
+      "message": "Hi Karen, great news - your job is locked in. We are lining up the trades now and will confirm start dates with you shortly. Sam"
+    }
+  ],
+  "createdAt": "2026-06-15T01:24:00.146Z",
+  "updatedAt": "2026-07-12T01:25:08.160Z"
+}

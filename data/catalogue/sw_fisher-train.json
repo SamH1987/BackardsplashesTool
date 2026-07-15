@@ -1,0 +1,17 @@
+{
+  "id": "sw_fisher-train",
+  "retailer": "Spa World",
+  "brand": "Fisher® Spas",
+  "name": "Fisher® Train™ Swim Spa",
+  "type": "swim spa",
+  "seats": "5",
+  "lengthM": 3.96,
+  "widthM": 2.29,
+  "heightM": 1.3,
+  "image": "sw_fisher-train.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/fisher/fisher-train/",
+  "createdAt": "2026-07-10T00:02:13.559Z",
+  "updatedAt": "2026-07-10T00:02:13.559Z",
+  "docFile": "sw_fisher-train.pdf",
+  "docSource": "Google Drive: SwimSpa's/Fisher Train Spa .pdf"
+}

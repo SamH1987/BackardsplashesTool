@@ -1,0 +1,17 @@
+{
+  "id": "sw_hydrozone",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Hydrozone™ Swim Spa",
+  "type": "swim spa",
+  "seats": "7",
+  "lengthM": 5.9,
+  "widthM": 2.3,
+  "heightM": "",
+  "image": "sw_hydrozone.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/vortex/hydrozone/",
+  "createdAt": "2026-07-10T00:01:51.292Z",
+  "updatedAt": "2026-07-10T00:01:51.298Z",
+  "docFile": "sw_hydrozone.pdf",
+  "docSource": "Google Drive: SwimSpa's/Hydrozone NEW.pdf"
+}

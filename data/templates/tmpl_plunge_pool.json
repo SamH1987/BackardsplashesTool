@@ -1,0 +1,20 @@
+{
+  "id": "tmpl_plunge_pool",
+  "name": "Plunge pool install",
+  "installType": "plunge pool",
+  "description": "Precast/fibreglass plunge pool, in-ground: excavation, base, crane, plumbing, electrical, backfill, handover. Prices are ex GST and are YOUR defaults - edit them in Settings > Price templates.",
+  "lineItems": [
+    { "code": "EXCAV", "description": "Excavation of pool pit and trenches, spoil removal", "trade": "excavation", "unit": "each", "defaultQty": 1, "unitPrice": 4600, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "DRAIN", "description": "Sub-surface drainage and aggregate around shell", "trade": "plumbing", "unit": "each", "defaultQty": 1, "unitPrice": 1400, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "SLAB", "description": "Reinforced concrete base slab, 125mm", "trade": "concrete", "unit": "m2", "defaultQty": 12, "unitPrice": 220, "supplier": "us", "prefill": "slab_area", "notes": "" },
+    { "code": "CRANE", "description": "Crane hire for shell placement", "trade": "crane", "unit": "each", "defaultQty": 1, "unitPrice": 2100, "supplier": "us", "prefill": "crane", "notes": "" },
+    { "code": "PLUMB-RUN", "description": "Water supply and drainage runs, trenched", "trade": "plumbing", "unit": "m", "defaultQty": 12, "unitPrice": 110, "supplier": "us", "prefill": "plumbing_run", "notes": "" },
+    { "code": "PLUMB-CONN", "description": "Plumbing rough-in, filtration connect and pressure test", "trade": "plumbing", "unit": "each", "defaultQty": 1, "unitPrice": 2100, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "ELEC-RUN", "description": "Electrical cable run from switchboard, trenched", "trade": "electrical", "unit": "m", "defaultQty": 15, "unitPrice": 95, "supplier": "us", "prefill": "electrical_run", "notes": "" },
+    { "code": "ELEC-CONN", "description": "Dedicated circuit, isolator, bonding, connect and test", "trade": "electrical", "unit": "each", "defaultQty": 1, "unitPrice": 1950, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "BACKFILL", "description": "Backfill, compact and rough level around shell", "trade": "excavation", "unit": "each", "defaultQty": 1, "unitPrice": 1100, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "ACCESS", "description": "Tight access allowance", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 850, "supplier": "us", "prefill": "tight_access", "notes": "" },
+    { "code": "HANDOVER", "description": "Fill, commission, water balance and handover walkthrough", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 550, "supplier": "us", "prefill": null, "notes": "" }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z"
+}

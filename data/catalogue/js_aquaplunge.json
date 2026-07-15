@@ -1,0 +1,15 @@
+{
+  "id": "js_aquaplunge",
+  "retailer": "Just Spas",
+  "brand": "AquaPlunge",
+  "name": "AquaPlunge",
+  "type": "plunge pool",
+  "seats": "",
+  "lengthM": 2.98,
+  "widthM": 2.28,
+  "heightM": 1.23,
+  "image": "js_aquaplunge.png",
+  "sourceUrl": "https://justspas.com.au/product/aquaplunge/",
+  "createdAt": "2026-07-10T00:02:23.462Z",
+  "updatedAt": "2026-07-10T00:02:23.463Z"
+}

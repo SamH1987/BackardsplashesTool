@@ -1,0 +1,17 @@
+{
+  "id": "as_duo-2-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Duo",
+  "type": "spa",
+  "seats": "2",
+  "lengthM": 2.13,
+  "widthM": 1,
+  "heightM": 0.76,
+  "image": "as_duo-2-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/compact/duo-2-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:06.524Z",
+  "updatedAt": "2026-07-09T21:29:06.524Z",
+  "docFile": "as_duo-2-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/duo/alpine-spas-nz-2026-spa-duo.pdf"
+}

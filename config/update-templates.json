@@ -1,0 +1,11 @@
+{
+  "_comment": "One message template per job stage. Placeholders: {firstName} {installType} {nextAction} {senderName}. Edit freely - these are the texts your customers get.",
+  "lead": "Hi {firstName}, thanks for getting in touch about your {installType}. Next step is a site visit so we can measure up and give you a firm price. I'll be in touch to lock in a time. {senderName}",
+  "survey_done": "Hi {firstName}, thanks for having us out. We've got everything we need from the site visit and your quote is being put together now. You'll have it within a few days. {senderName}",
+  "quote_sent": "Hi {firstName}, just checking you received the quote for your {installType}. Happy to talk through any of it - just call or reply here. {senderName}",
+  "accepted": "Hi {firstName}, great news - your job is locked in. We're lining up the trades now and will confirm start dates with you shortly. {senderName}",
+  "contractors_booked": "Hi {firstName}, your {installType} is booked in with our trades. We'll confirm exact days with you before anyone turns up on site. {senderName}",
+  "in_progress": "Hi {firstName}, quick update on your {installType}: work is underway and tracking along. Next up: {nextAction}. Any questions, just call. {senderName}",
+  "complete": "Hi {firstName}, the work on your {installType} is done. We'll do a final walk-through and handover with you, and the final invoice will follow. Thanks for having us. {senderName}",
+  "invoiced": "Hi {firstName}, the final invoice for your {installType} has been sent through. Once that's settled you're all done - enjoy it! {senderName}"
+}

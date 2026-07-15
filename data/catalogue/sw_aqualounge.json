@@ -1,0 +1,17 @@
+{
+  "id": "sw_aqualounge",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Aqualounge™ Swim Spa",
+  "type": "swim spa",
+  "seats": "4",
+  "lengthM": 3.98,
+  "widthM": 2.31,
+  "heightM": 1.2,
+  "image": "sw_aqualounge.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/vortex/aqualounge/",
+  "createdAt": "2026-07-10T00:02:13.053Z",
+  "updatedAt": "2026-07-10T00:02:13.053Z",
+  "docFile": "sw_aqualounge.pdf",
+  "docSource": "Google Drive: SwimSpa's/Aqualounge Pro Specifications.pdf"
+}

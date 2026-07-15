@@ -1,0 +1,17 @@
+{
+  "id": "sw_aquapace-swim-spa",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Aquapace™ Swim Spa",
+  "type": "swim spa",
+  "seats": "5",
+  "lengthM": 5.11,
+  "widthM": 2.29,
+  "heightM": 1.5,
+  "image": "sw_aquapace-swim-spa.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/vortex/aquapace-swim-spa/",
+  "createdAt": "2026-07-10T00:02:05.301Z",
+  "updatedAt": "2026-07-10T00:02:05.301Z",
+  "docFile": "sw_aquapace-swim-spa.pdf",
+  "docSource": "Google Drive: SwimSpa's/Vortex Aquaspace.pdf"
+}

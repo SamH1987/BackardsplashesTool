@@ -1,0 +1,17 @@
+{
+  "id": "sw_fisher-lap-tm-swim-spa",
+  "retailer": "Spa World",
+  "brand": "Fisher® Spas",
+  "name": "Fisher® Lap™ Swim Spa",
+  "type": "swim spa",
+  "seats": "5",
+  "lengthM": 5.87,
+  "widthM": 2.3,
+  "heightM": 1.49,
+  "image": "sw_fisher-lap-tm-swim-spa.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/fisher/fisher-lap-tm-swim-spa/",
+  "createdAt": "2026-07-10T00:02:01.994Z",
+  "updatedAt": "2026-07-10T00:02:01.994Z",
+  "docFile": "sw_fisher-lap-tm-swim-spa.pdf",
+  "docSource": "Google Drive: SwimSpa's/Fisher Lap 6m.pdf"
+}

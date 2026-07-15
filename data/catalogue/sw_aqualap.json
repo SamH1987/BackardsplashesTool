@@ -1,0 +1,17 @@
+{
+  "id": "sw_aqualap",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Aqualap™ Swim Spa",
+  "type": "swim spa",
+  "seats": "6",
+  "lengthM": "",
+  "widthM": "",
+  "heightM": "",
+  "image": "sw_aqualap.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/vortex/aqualap/",
+  "createdAt": "2026-07-10T00:02:14.136Z",
+  "updatedAt": "2026-07-10T00:02:14.136Z",
+  "docFile": "sw_aqualap.pdf",
+  "docSource": "Google Drive: SwimSpa's/Aqualap - Vortex.pdf"
+}

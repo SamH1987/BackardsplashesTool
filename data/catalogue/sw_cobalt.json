@@ -1,0 +1,15 @@
+{
+  "id": "sw_cobalt",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Cobalt™ Spa",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": "",
+  "widthM": "",
+  "heightM": "",
+  "image": "sw_cobalt.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/cobalt/",
+  "createdAt": "2026-07-10T00:01:57.172Z",
+  "updatedAt": "2026-07-10T00:01:57.172Z"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "sw_power-pro-16",
+  "retailer": "Spa World",
+  "brand": "Jacuzzi® Spas",
+  "name": "PowerPro® 16",
+  "type": "swim spa",
+  "seats": "4",
+  "lengthM": 4.69,
+  "widthM": 2.33,
+  "heightM": 1.35,
+  "image": "sw_power-pro-16.png",
+  "sourceUrl": "https://www.spaworld.com.au/swim-spas/jacuzzi/power-pro-16/",
+  "createdAt": "2026-07-10T00:01:53.563Z",
+  "updatedAt": "2026-07-10T00:01:53.563Z",
+  "docFile": "sw_power-pro-16.pdf",
+  "docSource": "Google Drive: SwimSpa's/Jacuzzi-j16-power-pro.pdf"
+}

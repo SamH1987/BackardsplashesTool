@@ -1,0 +1,20 @@
+{
+  "id": "tmpl_in_ground",
+  "name": "In-ground spa install",
+  "installType": "in-ground spa",
+  "description": "Fully in-ground spa: excavation, drainage, base, plumbing, electrical, crane placement, backfill and handover. Prices are ex GST and are YOUR defaults - edit them in Settings > Price templates.",
+  "lineItems": [
+    { "code": "EXCAV", "description": "Excavation of spa pit and trenches, spoil removal", "trade": "excavation", "unit": "each", "defaultQty": 1, "unitPrice": 3800, "supplier": "us", "prefill": null, "notes": "Includes machine hire and tip fees" },
+    { "code": "DRAIN", "description": "Sub-surface drainage and aggregate around shell", "trade": "plumbing", "unit": "each", "defaultQty": 1, "unitPrice": 1250, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "SLAB", "description": "Reinforced concrete base slab, 125mm", "trade": "concrete", "unit": "m2", "defaultQty": 10, "unitPrice": 220, "supplier": "us", "prefill": "slab_area", "notes": "Contractor supplies concrete and mesh" },
+    { "code": "CRANE", "description": "Crane hire for spa placement into pit", "trade": "crane", "unit": "each", "defaultQty": 1, "unitPrice": 1650, "supplier": "us", "prefill": "crane", "notes": "" },
+    { "code": "PLUMB-RUN", "description": "Water supply and drainage runs, trenched", "trade": "plumbing", "unit": "m", "defaultQty": 10, "unitPrice": 110, "supplier": "us", "prefill": "plumbing_run", "notes": "" },
+    { "code": "PLUMB-CONN", "description": "Plumbing rough-in, connection and pressure test", "trade": "plumbing", "unit": "each", "defaultQty": 1, "unitPrice": 1600, "supplier": "us", "prefill": null, "notes": "Licensed plumber" },
+    { "code": "ELEC-RUN", "description": "Electrical cable run from switchboard, trenched", "trade": "electrical", "unit": "m", "defaultQty": 15, "unitPrice": 95, "supplier": "us", "prefill": "electrical_run", "notes": "" },
+    { "code": "ELEC-CONN", "description": "Dedicated circuit, isolator, equipotential bonding, connect and test", "trade": "electrical", "unit": "each", "defaultQty": 1, "unitPrice": 1850, "supplier": "us", "prefill": null, "notes": "Licensed electrician, certificate of compliance supplied" },
+    { "code": "BACKFILL", "description": "Backfill, compact and rough level around shell", "trade": "excavation", "unit": "each", "defaultQty": 1, "unitPrice": 950, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "ACCESS", "description": "Tight access allowance - manual handling / smaller machine", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 850, "supplier": "us", "prefill": "tight_access", "notes": "" },
+    { "code": "HANDOVER", "description": "Fill, commission, water balance and handover walkthrough", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 450, "supplier": "us", "prefill": null, "notes": "" }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z"
+}

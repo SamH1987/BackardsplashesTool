@@ -1,0 +1,15 @@
+{
+  "id": "sw_gemini",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Gemini™ Spa ",
+  "type": "spa",
+  "seats": "2",
+  "lengthM": "",
+  "widthM": "",
+  "heightM": "",
+  "image": "sw_gemini.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/gemini/",
+  "createdAt": "2026-07-10T00:01:54.555Z",
+  "updatedAt": "2026-07-10T00:01:54.555Z"
+}

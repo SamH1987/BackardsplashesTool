@@ -1,0 +1,43 @@
+[
+  {
+    "_comment": "This is the self-check a quote must pass before it can be marked as sent. Set enabled to false to switch a check off. Reword labels freely. If you add your own check (any new id), it becomes a manual tick-box on the quote screen.",
+    "id": "measurements_accounted",
+    "label": "Every key survey measurement is filled in (spa size, access width, distances)",
+    "enabled": true
+  },
+  {
+    "id": "no_zero_line_items",
+    "label": "No line item left at $0",
+    "enabled": true
+  },
+  {
+    "id": "crane_priced_if_needed",
+    "label": "If the survey says crane needed, crane hire is priced in the quote",
+    "enabled": true
+  },
+  {
+    "id": "slab_sized_from_survey",
+    "label": "Slab size in the quote matches the spa dimensions from the survey",
+    "enabled": true
+  },
+  {
+    "id": "access_priced_if_tight",
+    "label": "Tight access is priced if the path is narrower than 1.1m",
+    "enabled": true
+  },
+  {
+    "id": "scope_matches_survey",
+    "label": "Scope description matches the survey notes (crane, dimensions)",
+    "enabled": true
+  },
+  {
+    "id": "validity_and_terms_set",
+    "label": "Validity period and payment terms are set",
+    "enabled": true
+  },
+  {
+    "id": "business_details_set",
+    "label": "Business details in Settings are real, not placeholders",
+    "enabled": true
+  }
+]

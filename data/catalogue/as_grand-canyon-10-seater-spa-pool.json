@@ -1,0 +1,17 @@
+{
+  "id": "as_grand-canyon-10-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Grand Canyon",
+  "type": "spa",
+  "seats": "10",
+  "lengthM": 3,
+  "widthM": 2.3,
+  "heightM": 1,
+  "image": "as_grand-canyon-10-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/large/grand-canyon-10-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:20.559Z",
+  "updatedAt": "2026-07-09T21:29:20.559Z",
+  "docFile": "as_grand-canyon-10-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/grand-canyon/alpine-spas-nz-2026-spa-grand-canyon.pdf"
+}

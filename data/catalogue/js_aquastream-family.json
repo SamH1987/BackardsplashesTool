@@ -1,0 +1,15 @@
+{
+  "id": "js_aquastream-family",
+  "retailer": "Just Spas",
+  "brand": "AquaStream",
+  "name": "AquaStream Family",
+  "type": "spa",
+  "seats": "",
+  "lengthM": 3.97,
+  "widthM": 2.28,
+  "heightM": 1.23,
+  "image": "js_aquastream-family.png",
+  "sourceUrl": "https://justspas.com.au/product/aquastream-family/",
+  "createdAt": "2026-07-10T00:02:25.886Z",
+  "updatedAt": "2026-07-10T00:02:25.886Z"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "as_nepal-3-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Nepal",
+  "type": "spa",
+  "seats": "3",
+  "lengthM": 2,
+  "widthM": 1.5,
+  "heightM": 0.79,
+  "image": "as_nepal-3-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/compact/nepal-3-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:08.340Z",
+  "updatedAt": "2026-07-09T21:29:08.340Z",
+  "docFile": "as_nepal-3-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/nepal/alpine-spas-nz-2026-spa-nepal.pdf"
+}

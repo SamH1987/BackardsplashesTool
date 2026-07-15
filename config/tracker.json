@@ -1,0 +1,12 @@
+{
+  "_comment": "How many days a job can sit in each stage before it gets flagged on the This Week screen. Edit the numbers to suit how you work.",
+  "stageThresholdDays": {
+    "lead": 7,
+    "survey_done": 3,
+    "quote_sent": 7,
+    "accepted": 5,
+    "contractors_booked": 14,
+    "in_progress": 21,
+    "complete": 7
+  }
+}

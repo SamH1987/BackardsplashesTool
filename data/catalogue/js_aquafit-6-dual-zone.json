@@ -1,0 +1,15 @@
+{
+  "id": "js_aquafit-6-dual-zone",
+  "retailer": "Just Spas",
+  "brand": "AquaFit",
+  "name": "AquaFit 6 Dual Zone",
+  "type": "spa",
+  "seats": "8",
+  "lengthM": 5.95,
+  "widthM": 2.28,
+  "heightM": 1.4,
+  "image": "js_aquafit-6-dual-zone.png",
+  "sourceUrl": "https://justspas.com.au/product/aquafit-6-dual-zone/",
+  "createdAt": "2026-07-10T00:02:49.755Z",
+  "updatedAt": "2026-07-10T00:02:49.755Z"
+}

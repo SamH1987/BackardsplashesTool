@@ -1,0 +1,15 @@
+{
+  "id": "sw_nexus-spa",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Nexus™ Spa",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": 2.5,
+  "widthM": 2.22,
+  "heightM": 0.9,
+  "image": "sw_nexus-spa.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/nexus-spa/",
+  "createdAt": "2026-07-10T00:02:05.805Z",
+  "updatedAt": "2026-07-10T00:02:05.805Z"
+}

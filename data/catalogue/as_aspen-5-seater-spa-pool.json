@@ -1,0 +1,17 @@
+{
+  "id": "as_aspen-5-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Aspen",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": 0.83,
+  "image": "as_aspen-5-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/family/aspen-5-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:10.286Z",
+  "updatedAt": "2026-07-09T21:29:10.286Z",
+  "docFile": "as_aspen-5-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/aspen/alpine-spas-nz-2026-spa-aspen.pdf"
+}

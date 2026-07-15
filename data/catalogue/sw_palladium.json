@@ -1,0 +1,17 @@
+{
+  "id": "sw_palladium",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Palladium™ Spa",
+  "type": "spa",
+  "seats": "10",
+  "lengthM": 3.51,
+  "widthM": 2.28,
+  "heightM": 0.9,
+  "image": "sw_palladium.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/palladium/",
+  "createdAt": "2026-07-10T00:01:58.297Z",
+  "updatedAt": "2026-07-10T00:01:58.297Z",
+  "docFile": "sw_palladium.pdf",
+  "docSource": "Google Drive: SwimSpa's/Vortex Palladium Specs.pdf"
+}

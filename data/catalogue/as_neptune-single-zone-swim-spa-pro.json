@@ -1,0 +1,17 @@
+{
+  "id": "as_neptune-single-zone-swim-spa-pro",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Pro Neptune Swim Spa",
+  "type": "swim spa",
+  "seats": "",
+  "lengthM": 5.94,
+  "widthM": 2.28,
+  "heightM": 1.53,
+  "image": "as_neptune-single-zone-swim-spa-pro.png",
+  "sourceUrl": "https://alpinespas.com.au/swim-spas/single-zone/neptune-single-zone-swim-spa-pro",
+  "createdAt": "2026-07-09T21:29:37.543Z",
+  "updatedAt": "2026-07-09T21:29:37.543Z",
+  "docFile": "as_neptune-single-zone-swim-spa-pro.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/swim-spas/neptune/alpine-swim-spas-brochure-2025-neptune-full.pdf"
+}

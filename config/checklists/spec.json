@@ -1,0 +1,38 @@
+[
+  {
+    "_comment": "This is the self-check a contractor spec must pass before it can be finalised and sent. Set enabled to false to switch a check off. If you add your own check (any new id), it becomes a manual tick-box on the spec screen.",
+    "id": "position_stated",
+    "label": "Position is stated explicitly - no 'as discussed'",
+    "enabled": true
+  },
+  {
+    "id": "dimensions_stated",
+    "label": "Dimensions and levels are stated",
+    "enabled": true
+  },
+  {
+    "id": "photos_attached",
+    "label": "Site photos are attached",
+    "enabled": true
+  },
+  {
+    "id": "materials_responsibility",
+    "label": "Every material states who supplies it",
+    "enabled": true
+  },
+  {
+    "id": "no_tbc_fields",
+    "label": "No field is blank or still says TBC",
+    "enabled": true
+  },
+  {
+    "id": "access_notes_present",
+    "label": "Site access notes are included",
+    "enabled": true
+  },
+  {
+    "id": "questions_listed",
+    "label": "'Confirm before starting' questions are listed",
+    "enabled": true
+  }
+]

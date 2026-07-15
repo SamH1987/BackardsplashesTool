@@ -1,0 +1,15 @@
+{
+  "id": "sw_nitro",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Nitro™ Spa",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": "",
+  "image": "sw_nitro.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/nitro/",
+  "createdAt": "2026-07-10T00:01:52.095Z",
+  "updatedAt": "2026-07-10T00:01:52.095Z"
+}

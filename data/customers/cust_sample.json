@@ -1,0 +1,15 @@
+{
+  "id": "cust_sample",
+  "name": "Karen & David Mitchell",
+  "phone": "0412 555 210",
+  "email": "kdmitchell@example.com",
+  "address": "14 Waratah St, Baulkham Hills NSW 2153",
+  "notes": "Found us through the spa dealer. Karen is the main contact, works from home most days. Dog on site (friendly) - keep the side gate shut.",
+  "externalRefs": {
+    "xero": null,
+    "googleDrive": null,
+    "uconnect": null
+  },
+  "createdAt": "2026-06-15T01:24:00.144Z",
+  "updatedAt": "2026-07-12T01:24:00.145Z"
+}

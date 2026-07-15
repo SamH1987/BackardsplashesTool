@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "spa-jobs", "runtimeExecutable": "./runtime/bin/node", "runtimeArgs": ["server.js"], "port": 4321 }
+  ]
+}

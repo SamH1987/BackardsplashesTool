@@ -1,0 +1,33 @@
+{
+  "id": "spec_sample_concrete",
+  "jobId": "job_sample",
+  "quoteId": "quote_sample",
+  "trade": "concrete",
+  "tradeLabel": "Concrete",
+  "status": "final",
+  "scope": "- Reinforced concrete base slab, 125mm (8.4 m2). Contractor supplies concrete and mesh",
+  "position": "Spa is going in the back left corner, one point eight metres off the rear boundary and one point two off the left side fence, so the equipment hatch faces the house. Karen wants the spa sitting flush with a deck they are building later, and they asked us to keep the concrete as small as we can. 1.8m from rear boundary. 1.2m from side boundary (left). 4.5m from house wall. 18m from switchboard. 6m from water tap. 8m from sewer point.",
+  "dimensions": "Spa: 2.3m long x 2.3m wide x 0.95m deep, approx 950kg dry. Levels: One step down at the side gate, then flat to the back corner",
+  "accessNotes": "Access path is 1.05m wide. Crane sets up on the street and lifts the shell over the house. Lift path over the back yard is clear of wires. Council parking permit may be needed for the crane - check. Righto, standing at the side gate looking down the path. Gate opening is one point zero five metres so it is tight, the shell will need to come over the house by crane. One step down at the gate then flat all the way to the back.",
+  "hazards": "Visible services on site: Water tap on rear wall, sewer point near laundry, overhead power over FRONT yard only - back yard clear for the lift. Obstacles: Lemon tree on the spa position - owner is removing it before work starts. Water tap on the rear wall of the house about six metres away, sewer point is near the laundry, call it eight metres. Overhead power comes in over the front yard, nothing over the back, so the crane lift path is clear.",
+  "materials": [
+    {
+      "item": "Reinforced concrete base slab, 125mm",
+      "suppliedBy": "We supply"
+    }
+  ],
+  "questions": [
+    "Confirm slab set-down height against finished ground level before pouring.",
+    "Confirm concrete truck access or whether a pump is needed.",
+    "Any reinforcement or engineering requirements beyond standard mesh?"
+  ],
+  "photoIds": [
+    "photo_sample1",
+    "photo_sample2",
+    "photo_sample3"
+  ],
+  "includeSketch": true,
+  "checkResults": null,
+  "createdAt": "2026-07-07T01:24:00.155Z",
+  "updatedAt": "2026-07-12T01:24:00.155Z"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "tmpl_above_ground",
+  "name": "Above-ground spa install",
+  "installType": "above-ground spa",
+  "description": "Standard above-ground portable spa: slab, power, position, handover. Prices are ex GST and are YOUR defaults - edit them in Settings > Price templates.",
+  "lineItems": [
+    { "code": "SLAB", "description": "Concrete slab / spa base, 100mm reinforced", "trade": "concrete", "unit": "m2", "defaultQty": 9, "unitPrice": 190, "supplier": "us", "prefill": "slab_area", "notes": "" },
+    { "code": "CRANE", "description": "Crane hire for spa placement", "trade": "crane", "unit": "each", "defaultQty": 1, "unitPrice": 1450, "supplier": "us", "prefill": "crane", "notes": "Half-day mobile crane incl. traffic control if street lift" },
+    { "code": "DELIV", "description": "Spa delivery, positioning and levelling", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 650, "supplier": "us", "prefill": null, "notes": "" },
+    { "code": "ELEC-RUN", "description": "Electrical cable run from switchboard (trenched or clipped)", "trade": "electrical", "unit": "m", "defaultQty": 15, "unitPrice": 95, "supplier": "us", "prefill": "electrical_run", "notes": "" },
+    { "code": "ELEC-CONN", "description": "Dedicated circuit, isolator switch, connection and test", "trade": "electrical", "unit": "each", "defaultQty": 1, "unitPrice": 1250, "supplier": "us", "prefill": null, "notes": "Licensed electrician, certificate of compliance supplied" },
+    { "code": "ACCESS", "description": "Tight access allowance - manual handling / spa trolley", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 550, "supplier": "us", "prefill": "tight_access", "notes": "" },
+    { "code": "HANDOVER", "description": "Fill, commission, water balance and handover walkthrough", "trade": "general", "unit": "each", "defaultQty": 1, "unitPrice": 450, "supplier": "us", "prefill": null, "notes": "" }
+  ],
+  "createdAt": "2026-01-01T00:00:00.000Z"
+}

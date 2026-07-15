@@ -1,0 +1,17 @@
+{
+  "id": "as_fuji-3-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Fuji",
+  "type": "spa",
+  "seats": "3",
+  "lengthM": 2,
+  "widthM": 1.5,
+  "heightM": 0.76,
+  "image": "as_fuji-3-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/compact/fuji-3-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:07.497Z",
+  "updatedAt": "2026-07-09T21:29:07.497Z",
+  "docFile": "as_fuji-3-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/fuji/alpine-spas-nz-2026-spa-fuji.pdf"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "js_aquastream-6-single-zone",
+  "retailer": "Just Spas",
+  "brand": "AquaStream",
+  "name": "AquaStream 6 Single Zone",
+  "type": "spa",
+  "seats": "",
+  "lengthM": 5.95,
+  "widthM": 2.28,
+  "heightM": 1.4,
+  "image": "js_aquastream-6-single-zone.png",
+  "sourceUrl": "https://justspas.com.au/product/aquastream-6-single-zone/",
+  "createdAt": "2026-07-10T00:02:33.046Z",
+  "updatedAt": "2026-07-10T00:02:33.046Z"
+}

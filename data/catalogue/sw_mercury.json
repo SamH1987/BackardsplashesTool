@@ -1,0 +1,15 @@
+{
+  "id": "sw_mercury",
+  "retailer": "Spa World",
+  "brand": " Vortex® Spas",
+  "name": "Mercury™ Spa",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": "",
+  "widthM": "",
+  "heightM": "",
+  "image": "sw_mercury.png",
+  "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/mercury/",
+  "createdAt": "2026-07-10T00:01:55.652Z",
+  "updatedAt": "2026-07-10T00:01:55.652Z"
+}

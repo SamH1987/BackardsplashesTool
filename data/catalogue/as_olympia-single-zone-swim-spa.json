@@ -1,0 +1,17 @@
+{
+  "id": "as_olympia-single-zone-swim-spa",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Olympia Swim Spa",
+  "type": "swim spa",
+  "seats": "",
+  "lengthM": 4.8,
+  "widthM": 2.28,
+  "heightM": 1.53,
+  "image": "as_olympia-single-zone-swim-spa.png",
+  "sourceUrl": "https://alpinespas.com.au/swim-spas/single-zone/olympia-single-zone-swim-spa",
+  "createdAt": "2026-07-09T21:29:39.377Z",
+  "updatedAt": "2026-07-09T21:29:39.377Z",
+  "docFile": "as_olympia-single-zone-swim-spa.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/swim-spas/olympia/alpine-swim-spas-brochure-2025-olympia-full.pdf"
+}

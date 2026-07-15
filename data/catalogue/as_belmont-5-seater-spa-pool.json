@@ -1,0 +1,17 @@
+{
+  "id": "as_belmont-5-seater-spa-pool",
+  "retailer": "Alpine Spas",
+  "brand": "Alpine Spas",
+  "name": "Belmont",
+  "type": "spa",
+  "seats": "5",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": 0.78,
+  "image": "as_belmont-5-seater-spa-pool.png",
+  "sourceUrl": "https://alpinespas.com.au/spa-pools/family/belmont-5-seater-spa-pool",
+  "createdAt": "2026-07-09T21:29:11.663Z",
+  "updatedAt": "2026-07-09T21:29:11.663Z",
+  "docFile": "as_belmont-5-seater-spa-pool.pdf",
+  "docSource": "https://cms.alpinespas.co.nz/assets/content/products/spa-pools/belmont/alpine-spas-nz-2026-spa-belmont.pdf"
+}
