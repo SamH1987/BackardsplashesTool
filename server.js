@@ -7,6 +7,7 @@ const express = require('express');
 const multer = require('multer');
 
 const storage = require('./lib/storage');
+const filestore = require('./lib/filestore');
 const { prefillLineItems, buildScopeDescription, quoteTotals } = require('./lib/prefill');
 const { buildSpec, tradeLabel } = require('./lib/specgen');
 const { runChecks } = require('./lib/checks');
@@ -16,9 +17,66 @@ const { structureNotes } = require('./lib/transcribe');
 const app = express();
 const PORT = process.env.PORT || 4321;
 
+// ---- Login gate (cloud) -------------------------------------------------------
+// When APP_PASSWORD is set (it always is on the hosted version), every data
+// route needs the session cookie. The static shell stays public so the login
+// page and the offline app can load; all actual business data sits behind this.
+const nodeCrypto = require('crypto');
+const APP_PASSWORD = process.env.APP_PASSWORD || '';
+function sessionToken() {
+  return nodeCrypto.createHmac('sha256', APP_PASSWORD).update('spa-jobs-session-v1').digest('hex');
+}
+function isAuthed(req) {
+  if (!APP_PASSWORD) return true;
+  return (req.headers.cookie || '').split(/;\s*/).includes('sjauth=' + sessionToken());
+}
+
 app.use(express.json({ limit: '25mb' }));
+
+app.post('/api/login', (req, res) => {
+  if (!APP_PASSWORD) return res.json({ ok: true });
+  const given = String((req.body || {}).password || '');
+  if (given !== APP_PASSWORD) {
+    return setTimeout(() => res.status(401).json({ error: 'Wrong password' }), 800);
+  }
+  res.setHeader('Set-Cookie', 'sjauth=' + sessionToken() +
+    '; Path=/; HttpOnly; SameSite=Lax; Max-Age=15552000' + (process.env.CLOUD ? '; Secure' : ''));
+  res.json({ ok: true });
+});
+
+app.use((req, res, next) => {
+  if (!APP_PASSWORD) return next();
+  const protectedPath = req.path.startsWith('/api/') || req.path.startsWith('/uploads') ||
+    req.path.startsWith('/catalogue-') || req.path.startsWith('/decking-images');
+  const open = req.path === '/api/login' || req.path === '/api/meta';
+  if (protectedPath && !open && !isAuthed(req)) {
+    return res.status(401).json({ error: 'login required' });
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(storage.uploadsDir));
+
+// File serving: straight off the disk locally; streamed out of the private
+// cloud bucket (behind the login) when hosted.
+if (filestore.isCloud) {
+  const serveArea = area => async (req, res) => {
+    try {
+      const name = decodeURIComponent(req.params[0] || '');
+      const buf = await filestore.read(area, name);
+      if (!buf) return res.status(404).end();
+      res.setHeader('Content-Type', filestore.mimeFor(name));
+      res.setHeader('Cache-Control', 'private, max-age=86400');
+      res.send(buf);
+    } catch (e) { res.status(400).end(); }
+  };
+  app.get('/uploads/*', serveArea('uploads'));
+  app.get('/catalogue-images/*', serveArea('catalogue-images'));
+  app.get('/catalogue-docs/*', serveArea('catalogue-docs'));
+  app.get('/decking-images/*', serveArea('decking-images'));
+} else {
+  app.use('/uploads', express.static(storage.uploadsDir));
+}
 
 storage.ensureDir(storage.uploadsDir);
 const upload = multer({
@@ -126,10 +184,11 @@ app.put('/api/jobs/:id', (req, res) => {
 
 // ---- Job documents: plans, engineering, anything worth keeping on the job ----
 
-app.post('/api/jobs/:id/documents', upload.single('file'), (req, res) => {
+app.post('/api/jobs/:id/documents', upload.single('file'), async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   if (!req.file) return err(res, 400, 'No file received');
+  await filestore.promoteUpload(req.file.filename, filestore.mimeFor(req.file.filename));
   job.documents = job.documents || [];
   job.documents.push({
     label: (req.body.label || req.file.originalname).trim(),
@@ -140,23 +199,23 @@ app.post('/api/jobs/:id/documents', upload.single('file'), (req, res) => {
   res.json(job.documents);
 });
 
-app.delete('/api/jobs/:id/documents/:file', (req, res) => {
+app.delete('/api/jobs/:id/documents/:file', async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   const safe = req.params.file.replace(/[^a-zA-Z0-9._-]/g, '');
   job.documents = (job.documents || []).filter(d => d.file !== safe);
-  const full = path.join(storage.uploadsDir, safe);
-  if (fs.existsSync(full)) fs.unlinkSync(full);
+  await filestore.remove('uploads', safe);
   storage.jobs.save(job);
   res.json(job.documents);
 });
 
 // ---- Survey uploads ---------------------------------------------------------
 
-app.post('/api/jobs/:id/photos', upload.single('photo'), (req, res) => {
+app.post('/api/jobs/:id/photos', upload.single('photo'), async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   if (!req.file) return err(res, 400, 'No photo received');
+  await filestore.promoteUpload(req.file.filename, filestore.mimeFor(req.file.filename));
   job.survey = job.survey || emptySurvey();
   const photo = { id: storage.newId('photo'), file: req.file.filename, annotatedFile: null, caption: req.body.caption || '' };
   job.survey.photos.push(photo);
@@ -165,7 +224,7 @@ app.post('/api/jobs/:id/photos', upload.single('photo'), (req, res) => {
 });
 
 // Annotated version arrives as a data-URL PNG from the drawing canvas.
-app.post('/api/jobs/:id/photos/:photoId/annotate', (req, res) => {
+app.post('/api/jobs/:id/photos/:photoId/annotate', async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job || !job.survey) return err(res, 404, 'Job or survey not found');
   const photo = job.survey.photos.find(p => p.id === req.params.photoId);
@@ -174,20 +233,20 @@ app.post('/api/jobs/:id/photos/:photoId/annotate', (req, res) => {
   const m = dataUrl.match(/^data:image\/png;base64,(.+)$/);
   if (!m) return err(res, 400, 'Expected a PNG data URL');
   const filename = 'annotated_' + photo.id + '.png';
-  fs.writeFileSync(path.join(storage.uploadsDir, filename), Buffer.from(m[1], 'base64'));
+  await filestore.save('uploads', filename, Buffer.from(m[1], 'base64'), 'image/png');
   photo.annotatedFile = filename;
   storage.jobs.save(job);
   res.json(photo);
 });
 
-app.post('/api/jobs/:id/sketch', (req, res) => {
+app.post('/api/jobs/:id/sketch', async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   job.survey = job.survey || emptySurvey();
   const m = ((req.body || {}).dataUrl || '').match(/^data:image\/png;base64,(.+)$/);
   if (!m) return err(res, 400, 'Expected a PNG data URL');
   const filename = 'sketch_' + job.id + '_' + Date.now() + '.png';
-  fs.writeFileSync(path.join(storage.uploadsDir, filename), Buffer.from(m[1], 'base64'));
+  await filestore.save('uploads', filename, Buffer.from(m[1], 'base64'), 'image/png');
   job.survey.sketch = { file: filename };
   storage.jobs.save(job);
   res.json(job.survey.sketch);
@@ -195,7 +254,7 @@ app.post('/api/jobs/:id/sketch', (req, res) => {
 
 // 3D scan of the yard - shown in the 3D viewer. Takes a .glb / .gltf straight,
 // or the .zip Polycam exports (model plus its texture files) and unpacks it.
-app.post('/api/jobs/:id/scan', upload.single('scan'), (req, res) => {
+app.post('/api/jobs/:id/scan', upload.single('scan'), async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   if (!req.file) return err(res, 400, 'No scan file received');
@@ -211,11 +270,23 @@ app.post('/api/jobs/:id/scan', upload.single('scan'), (req, res) => {
       const found = findModelFile(dirPath, dirPath);
       if (!found) return err(res, 400, 'No 3D model found inside that zip. In Polycam, export as GLTF (not raw data).');
       scanFile = dir + '/' + found;
+      if (filestore.isCloud) {
+        // push every extracted file (model + its textures) to cloud storage
+        const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(en =>
+          en.isDirectory() ? walk(path.join(d, en.name)) : [path.join(d, en.name)]);
+        for (const f of walk(dirPath)) {
+          const rel = dir + '/' + path.relative(dirPath, f).split(path.sep).join('/');
+          await filestore.save('uploads', rel, fs.readFileSync(f), filestore.mimeFor(f));
+        }
+        fs.rmSync(dirPath, { recursive: true, force: true });
+      }
     } catch (e) {
       return err(res, 500, 'Could not unpack the zip: ' + e.message);
     }
   } else if (!/\.(glb|gltf)$/i.test(scanFile)) {
     return err(res, 400, 'Upload the scan as GLTF/GLB, or the zip that Polycam exports.');
+  } else {
+    await filestore.promoteUpload(scanFile, filestore.mimeFor(scanFile));
   }
   job.survey = job.survey || emptySurvey();
   job.survey.scan = { file: scanFile };
@@ -240,10 +311,11 @@ function findModelFile(dir, root) {
   return gltf;
 }
 
-app.post('/api/jobs/:id/video', upload.single('video'), (req, res) => {
+app.post('/api/jobs/:id/video', upload.single('video'), async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job) return err(res, 404, 'Job not found');
   if (!req.file) return err(res, 400, 'No video received');
+  await filestore.promoteUpload(req.file.filename, filestore.mimeFor(req.file.filename));
   job.survey = job.survey || emptySurvey();
   job.survey.video.file = req.file.filename;
   storage.jobs.save(job);
@@ -253,6 +325,9 @@ app.post('/api/jobs/:id/video', upload.single('video'), (req, res) => {
 app.post('/api/jobs/:id/transcribe', async (req, res) => {
   const job = storage.jobs.get(req.params.id);
   if (!job || !job.survey || !job.survey.video.file) return err(res, 400, 'Upload a video first');
+  if (process.env.DISABLE_TRANSCRIBE) {
+    return err(res, 503, 'Transcription is not available on the hosted version (it needs more memory than the free server has). Type or paste the walkthrough notes instead, then use Sort transcript into notes.');
+  }
   try {
     const { transcribe } = require('./lib/transcribe');
     const text = await transcribe(path.join(storage.uploadsDir, job.survey.video.file));
@@ -515,25 +590,25 @@ app.get('/api/specs/:id/pdf', async (req, res) => {
   if (wantSpaDoc && sm) {
     const cat = catalogueRecord(sm.id);
     if (cat && cat.docFile) {
-      const full = path.join(CATALOGUE_DOC_DIR, cat.docFile);
-      if (fs.existsSync(full)) attachments.push({ path: full, type: 'pdf' });
+      const bytes = await filestore.read('catalogue-docs', cat.docFile);
+      if (bytes) attachments.push({ bytes, type: 'pdf' });
     }
   }
   for (const f of s.attachDocs || []) {
     const d = ((job && job.documents) || []).find(x => x.file === f);
     if (!d) continue;
-    const full = path.join(storage.uploadsDir, d.file);
-    if (!fs.existsSync(full)) continue;
     const ext = path.extname(d.file).toLowerCase();
     const type = ext === '.pdf' ? 'pdf' : ext === '.png' ? 'png' : (ext === '.jpg' || ext === '.jpeg') ? 'jpg' : null;
-    if (type) attachments.push({ path: full, type });
+    if (!type) continue;
+    const bytes = await filestore.read('uploads', d.file);
+    if (bytes) attachments.push({ bytes, type });
   }
   if (attachments.length) {
     try {
       const { PDFDocument } = require('pdf-lib');
       const merged = await PDFDocument.load(buffer);
       for (const a of attachments) {
-        const bytes = fs.readFileSync(a.path);
+        const bytes = a.bytes;
         if (a.type === 'pdf') {
           const src = await PDFDocument.load(bytes, { ignoreEncryption: true });
           const pages = await merged.copyPages(src, src.getPageIndices());
@@ -659,22 +734,20 @@ const CATALOGUE_DOC_DIR = path.join(storage.DATA, 'catalogue-docs');
 storage.ensureDir(CATALOGUE_DIR);
 storage.ensureDir(CATALOGUE_IMG_DIR);
 storage.ensureDir(CATALOGUE_DOC_DIR);
-app.use('/catalogue-images', express.static(CATALOGUE_IMG_DIR));
-app.use('/catalogue-docs', express.static(CATALOGUE_DOC_DIR));
+if (!filestore.isCloud) {
+  app.use('/catalogue-images', express.static(CATALOGUE_IMG_DIR));
+  app.use('/catalogue-docs', express.static(CATALOGUE_DOC_DIR));
+}
+
+const catalogueColl = storage.collection('catalogue');
 
 function catalogueRecord(id) {
-  const file = path.join(CATALOGUE_DIR, String(id || '').replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
-  return fs.existsSync(file) ? storage.readJson(file) : null;
+  return catalogueColl.get(String(id || '').replace(/[^a-zA-Z0-9_-]/g, ''));
 }
 
-function listCatalogue() {
-  return fs.readdirSync(CATALOGUE_DIR)
-    .filter(f => f.endsWith('.json'))
-    .map(f => storage.readJson(path.join(CATALOGUE_DIR, f)))
-    .sort((a, b) => (a.brand + a.name).localeCompare(b.brand + b.name));
-}
-
-app.get('/api/catalogue', (req, res) => res.json(listCatalogue()));
+app.get('/api/catalogue', (req, res) => {
+  res.json(catalogueColl.list().sort((a, b) => (a.brand + a.name).localeCompare(b.brand + b.name)));
+});
 
 app.post('/api/catalogue', (req, res) => {
   const b = req.body || {};
@@ -686,46 +759,40 @@ app.post('/api/catalogue', (req, res) => {
     lengthM: b.lengthM || '', widthM: b.widthM || '', heightM: b.heightM || '',
     image: null, sourceUrl: b.sourceUrl || '', createdAt: new Date().toISOString()
   };
-  storage.writeJson(path.join(CATALOGUE_DIR, rec.id + '.json'), rec);
+  catalogueColl.save(rec);
   res.json(rec);
 });
 
 app.put('/api/catalogue/:id', (req, res) => {
-  const file = path.join(CATALOGUE_DIR, req.params.id.replace(/[^a-zA-Z0-9_-]/g, '') + '.json');
-  if (!fs.existsSync(file)) return err(res, 404, 'Model not found');
-  const rec = storage.readJson(file);
+  const rec = catalogueRecord(req.params.id);
+  if (!rec) return err(res, 404, 'Model not found');
   for (const k of ['brand', 'name', 'type', 'seats', 'lengthM', 'widthM', 'heightM', 'sourceUrl']) {
     if (req.body[k] !== undefined) rec[k] = req.body[k];
   }
-  rec.updatedAt = new Date().toISOString();
-  storage.writeJson(file, rec);
+  catalogueColl.save(rec);
   res.json(rec);
 });
 
-app.delete('/api/catalogue/:id', (req, res) => {
-  const safe = req.params.id.replace(/[^a-zA-Z0-9_-]/g, '');
-  const file = path.join(CATALOGUE_DIR, safe + '.json');
-  if (fs.existsSync(file)) {
-    const rec = storage.readJson(file);
-    if (rec.image && fs.existsSync(path.join(CATALOGUE_IMG_DIR, rec.image))) {
-      fs.unlinkSync(path.join(CATALOGUE_IMG_DIR, rec.image));
-    }
-    fs.unlinkSync(file);
+app.delete('/api/catalogue/:id', async (req, res) => {
+  const rec = catalogueRecord(req.params.id);
+  if (rec) {
+    if (rec.image) await filestore.remove('catalogue-images', rec.image);
+    catalogueColl.remove(rec.id);
   }
   res.json({ ok: true });
 });
 
-app.post('/api/catalogue/:id/image', upload.single('image'), (req, res) => {
-  const safe = req.params.id.replace(/[^a-zA-Z0-9_-]/g, '');
-  const file = path.join(CATALOGUE_DIR, safe + '.json');
-  if (!fs.existsSync(file)) return err(res, 404, 'Model not found');
+app.post('/api/catalogue/:id/image', upload.single('image'), async (req, res) => {
+  const rec = catalogueRecord(req.params.id);
+  if (!rec) return err(res, 404, 'Model not found');
   if (!req.file) return err(res, 400, 'No image received');
-  const rec = storage.readJson(file);
   const ext = (path.extname(req.file.originalname) || '.jpg').toLowerCase();
-  const imgName = safe + ext;
-  fs.renameSync(req.file.path, path.join(CATALOGUE_IMG_DIR, imgName));
+  const imgName = rec.id + ext;
+  const buf = fs.readFileSync(req.file.path);
+  await filestore.save('catalogue-images', imgName, buf, filestore.mimeFor(imgName));
+  fs.unlinkSync(req.file.path);
   rec.image = imgName;
-  storage.writeJson(file, rec);
+  catalogueColl.save(rec);
   res.json(rec);
 });
 
@@ -734,14 +801,14 @@ const DECKING_DIR = path.join(storage.DATA, 'decking');
 const DECKING_IMG_DIR = path.join(storage.DATA, 'decking-images');
 storage.ensureDir(DECKING_DIR);
 storage.ensureDir(DECKING_IMG_DIR);
-app.use('/decking-images', express.static(DECKING_IMG_DIR));
+if (!filestore.isCloud) {
+  app.use('/decking-images', express.static(DECKING_IMG_DIR));
+}
 
+const deckingColl = storage.collection('decking');
 app.get('/api/decking', (req, res) => {
-  const list = fs.readdirSync(DECKING_DIR)
-    .filter(f => f.endsWith('.json'))
-    .map(f => storage.readJson(path.join(DECKING_DIR, f)))
-    .sort((a, b) => (a.brand + a.range + a.name).localeCompare(b.brand + b.range + b.name));
-  res.json(list);
+  res.json(deckingColl.list().sort((a, b) =>
+    (a.brand + a.range + a.name).localeCompare(b.brand + b.range + b.name)));
 });
 
 // ---- Owner-only area: passcode-locked actual costs and profit -----------------
@@ -807,15 +874,17 @@ app.post('/api/private/change', (req, res) => {
   res.json(issueToken());
 });
 
-const PRIVATE_DIR = path.join(storage.DATA, 'private');
+// Costs live in their own collection ('private'), which no ordinary screen or
+// endpoint ever reads. Locally that's the data/private folder; in the cloud
+// it's rows in the same protected database.
+const privateColl = storage.collection('private');
 
 // Costs for a job: one row per line item of the accepted (or latest) quote,
 // with the actual cost typed in as the job runs, plus unplanned extras.
 app.get('/api/private/costs/:jobId', requirePrivate, (req, res) => {
   const job = storage.jobs.get(req.params.jobId);
   if (!job) return err(res, 404, 'Job not found');
-  const file = path.join(PRIVATE_DIR, 'costs_' + job.id + '.json');
-  const record = storage.readJson(file, { jobId: job.id, items: [], extras: [] });
+  const record = privateColl.get('costs_' + job.id) || { id: 'costs_' + job.id, jobId: job.id, items: [], extras: [] };
   const quotes = storage.quotes.list().filter(q => q.jobId === job.id);
   const quote = quotes.find(q => q.status === 'accepted') || quotes[quotes.length - 1] || null;
   if (quote) {
@@ -840,45 +909,58 @@ app.put('/api/private/costs/:jobId', requirePrivate, (req, res) => {
   const job = storage.jobs.get(req.params.jobId);
   if (!job) return err(res, 404, 'Job not found');
   const b = req.body || {};
-  const record = { jobId: job.id, items: b.items || [], extras: b.extras || [], updatedAt: new Date().toISOString() };
-  storage.writeJson(path.join(PRIVATE_DIR, 'costs_' + job.id + '.json'), record);
+  const record = { id: 'costs_' + job.id, jobId: job.id, items: b.items || [], extras: b.extras || [] };
+  privateColl.save(record);
   res.json(record);
 });
 
 app.get('/api/meta', (req, res) => {
-  res.json({ stages: STAGES, trades: ['concrete', 'plumbing', 'electrical', 'excavation', 'crane', 'general'].map(t => ({ id: t, label: tradeLabel(t) })) });
+  res.json({
+    stages: STAGES,
+    trades: ['concrete', 'plumbing', 'electrical', 'excavation', 'crane', 'general'].map(t => ({ id: t, label: tradeLabel(t) })),
+    cloud: storage.IS_CLOUD,
+    transcribe: !process.env.DISABLE_TRANSCRIBE,
+    loginRequired: !!APP_PASSWORD
+  });
 });
 
-app.listen(PORT, () => {
-  console.log('');
-  console.log('  Spa Jobs is running.');
-  console.log('  Open this in your browser:  http://localhost:' + PORT);
-  console.log('  (On your phone, use this computer\'s address, e.g. http://192.168.x.x:' + PORT + ')');
-  console.log('');
-});
+// In cloud mode the database must be loaded before we take requests.
+storage.ready().then(() => {
+  app.listen(PORT, () => {
+    console.log('');
+    console.log('  Spa Jobs is running' + (storage.IS_CLOUD ? ' (cloud mode).' : '.'));
+    console.log('  Open this in your browser:  http://localhost:' + PORT);
+    if (!storage.IS_CLOUD) {
+      console.log('  (On your phone, use this computer\'s address, e.g. http://192.168.x.x:' + PORT + ')');
+    }
+    console.log('');
+  });
 
-// HTTPS twin of the same app. Only needed for the Meta Quest headset: the
-// Quest browser refuses VR/AR on plain http. Uses a self-signed certificate
-// generated on first start - the headset shows a warning once, choose
-// "Advanced" then "Proceed" and it works from then on.
-const HTTPS_PORT = process.env.HTTPS_PORT || (Number(PORT) + 1);
-try {
-  const https = require('https');
-  const { execSync } = require('child_process');
-  const sslDir = path.join(__dirname, 'config', 'ssl');
-  const keyFile = path.join(sslDir, 'key.pem');
-  const certFile = path.join(sslDir, 'cert.pem');
-  if (!fs.existsSync(keyFile) || !fs.existsSync(certFile)) {
-    fs.mkdirSync(sslDir, { recursive: true });
-    execSync('openssl req -x509 -newkey rsa:2048 -keyout "' + keyFile + '" -out "' + certFile +
-      '" -days 3650 -nodes -subj "/CN=spa-jobs.local"', { stdio: 'ignore' });
+  // HTTPS twin for the Meta Quest headset - local mode only (the hosted
+  // version gets real HTTPS from the platform).
+  if (process.env.CLOUD) return;
+  const HTTPS_PORT = process.env.HTTPS_PORT || (Number(PORT) + 1);
+  try {
+    const https = require('https');
+    const { execSync } = require('child_process');
+    const sslDir = path.join(__dirname, 'config', 'ssl');
+    const keyFile = path.join(sslDir, 'key.pem');
+    const certFile = path.join(sslDir, 'cert.pem');
+    if (!fs.existsSync(keyFile) || !fs.existsSync(certFile)) {
+      fs.mkdirSync(sslDir, { recursive: true });
+      execSync('openssl req -x509 -newkey rsa:2048 -keyout "' + keyFile + '" -out "' + certFile +
+        '" -days 3650 -nodes -subj "/CN=spa-jobs.local"', { stdio: 'ignore' });
+    }
+    https.createServer({ key: fs.readFileSync(keyFile), cert: fs.readFileSync(certFile) }, app)
+      .listen(HTTPS_PORT, () => {
+        console.log('  For the Meta Quest headset (same wifi):  https://<this computer\'s address>:' + HTTPS_PORT);
+        console.log('  (The headset will warn about the certificate once - choose Advanced, then Proceed.)');
+        console.log('');
+      });
+  } catch (e) {
+    console.log('  (https for the VR headset not available: ' + e.message + ')');
   }
-  https.createServer({ key: fs.readFileSync(keyFile), cert: fs.readFileSync(certFile) }, app)
-    .listen(HTTPS_PORT, () => {
-      console.log('  For the Meta Quest headset (same wifi):  https://<this computer\'s address>:' + HTTPS_PORT);
-      console.log('  (The headset will warn about the certificate once - choose Advanced, then Proceed.)');
-      console.log('');
-    });
-} catch (e) {
-  console.log('  (https for the VR headset not available: ' + e.message + ')');
-}
+}).catch(e => {
+  console.error('Could not connect to the database:', e.message);
+  process.exit(1);
+});

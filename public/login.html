@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Spa Jobs - log in</title>
+  <meta name="theme-color" content="#0e5f76">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar"><span class="brand">Spa Jobs</span></header>
+  <main>
+    <div class="card" style="max-width:420px;margin:60px auto">
+      <h2>Log in</h2>
+      <p class="small muted">The team password for Spa Jobs.</p>
+      <label class="field"><span>Password</span><input type="password" id="pw" autocomplete="current-password"></label>
+      <button id="go">Log in</button>
+      <p id="msg" class="small" style="color:var(--red)"></p>
+    </div>
+  </main>
+  <script>
+    const go = async () => {
+      document.getElementById('msg').textContent = '';
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: document.getElementById('pw').value })
+        });
+        if (!res.ok) {
+          const d = await res.json().catch(() => ({}));
+          document.getElementById('msg').textContent = d.error || 'Login failed';
+          return;
+        }
+        location.href = '/';
+      } catch (e) {
+        document.getElementById('msg').textContent = 'No connection - try again.';
+      }
+    };
+    document.getElementById('go').onclick = go;
+    document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+    document.getElementById('pw').focus();
+  </script>
+</body>
+</html>

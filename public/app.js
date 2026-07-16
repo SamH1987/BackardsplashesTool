@@ -19,6 +19,10 @@ async function api(method, url, body) {
   }
   const res = await fetch(url, opts);
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && (data.error || '') === 'login required') {
+    location.href = '/login.html';
+    throw new Error('login required');
+  }
   if (!res.ok) {
     const e = new Error(data.error || ('Request failed (' + res.status + ')'));
     e.data = data;
@@ -879,6 +883,15 @@ async function viewSurvey(jobId) {
     }
     $('#vid-transcribe').disabled = false;
   };
+  // hosted version has no transcription horsepower - grey the button honestly
+  api('GET', '/api/meta').then(mt => {
+    if (mt.transcribe === false) {
+      const b = $('#vid-transcribe');
+      b.disabled = true;
+      b.textContent = 'Transcribe (not available on hosted version)';
+    }
+  }).catch(() => {});
+
   $('#vid-structure').onclick = async () => {
     const notes = await api('POST', '/api/structure-notes', { text: $('#vid-transcript').value });
     for (const k of ['position', 'dimensions', 'access', 'hazards', 'requests', 'general']) {

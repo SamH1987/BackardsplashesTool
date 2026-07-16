@@ -6,10 +6,10 @@
    Writes made offline are queued by the app itself (see app.js) and synced
    when the connection returns. */
 
-const VERSION = 'spajobs-v2';
+const VERSION = 'spajobs-v3';
 const SHELL = [
   '/', '/index.html', '/app.js', '/styles.css',
-  '/3d.html', '/3d.js',
+  '/login.html', '/3d.html', '/3d.js',
   '/vendor/three.min.js', '/vendor/GLTFLoader.js',
   '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'
 ];

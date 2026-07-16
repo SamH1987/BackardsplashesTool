@@ -62,6 +62,18 @@ Everything is plain files inside this folder — `data/customers`, `data/jobs`, 
 
 Every job has a **Job costs & profit** button that opens a passcode-locked area: type in what each quoted item actually cost you as the job runs (plus any extras), and it shows profit against the quote. The first time you open it you set the passcode — pick something only you know, because there is no reset. Cost data lives in `data/private/`, which no other screen ever reads, so a future surveyor or coordinator using this system never sees your numbers. (Anyone with full access to this computer's files could still open that folder — the passcode protects the app, not the hard drive.)
 
+## Running in the cloud (no computer at home needed)
+
+The same code runs hosted, using two free services: **Render** (runs the app, gives it HTTPS and a public address) and **Supabase** (holds the database and all the files). In cloud mode the app is protected by a team login password, video transcription is off (type notes instead), and the offline phone mode still works.
+
+1. **Supabase** (supabase.com, free): create a project. Note three values: the **Session pooler** connection string (Connect button), the **Project URL** and the **service_role key** (Settings → API).
+2. **Render** (render.com, free): New → Blueprint → connect this GitHub repo. It reads `render.yaml`. Fill in the four environment variables: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, and `APP_PASSWORD` (the team login you choose).
+3. First deploy seeds the cloud with the templates, checklists, catalogue and sample job from the repo. To bring across the real business from a computer that has it, run the migration there once:
+   `DATABASE_URL='...' SUPABASE_URL='...' SUPABASE_SERVICE_KEY='...' runtime/bin/node scripts/migrate_to_cloud.js`
+4. **Custom domain**: in Render → Settings → Custom Domains, add e.g. `tool.backyardsplashes.com.au`, then create the CNAME record it shows you at your DNS provider.
+
+Free-tier honesty: the server sleeps after ~15 idle minutes (first open of the day takes ~30-60 seconds), Supabase's free database pauses if untouched for a week (opening the app wakes it), and files are capped at 50 MB each.
+
 ## Setting up on a new computer (from the GitHub copy)
 
 The GitHub repository holds the system itself — the code, docs, price templates, checklists and the sample job. It deliberately leaves out live business data (customers, jobs, quotes, photos, costs), the scraped catalogue media, and the bundled Node runtime. To stand it up fresh:

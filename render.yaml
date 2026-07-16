@@ -1,0 +1,24 @@
+# Render blueprint: hosts Spa Jobs on the free tier.
+# Connect this repo at render.com and it reads this file automatically.
+# You then set the four secret environment variables in the Render dashboard.
+services:
+  - type: web
+    name: spa-jobs
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=optional
+    startCommand: node server.js
+    healthCheckPath: /api/meta
+    envVars:
+      - key: CLOUD
+        value: "1"
+      - key: DISABLE_TRANSCRIBE
+        value: "1"
+      - key: DATABASE_URL # Supabase -> Connect -> Session pooler connection string
+        sync: false
+      - key: SUPABASE_URL # Supabase -> Settings -> API -> Project URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY # Supabase -> Settings -> API -> service_role key
+        sync: false
+      - key: APP_PASSWORD # the team login password you choose
+        sync: false

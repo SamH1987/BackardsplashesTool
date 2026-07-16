@@ -16,7 +16,11 @@
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
 
   fetch('/api/jobs/' + jobId)
-    .then(r => { if (!r.ok) throw new Error('Job not found'); return r.json(); })
+    .then(r => {
+      if (r.status === 401) { location.href = '/login.html'; throw new Error('login required'); }
+      if (!r.ok) throw new Error('Job not found');
+      return r.json();
+    })
     .then(init)
     .catch(e => fail(e.message));
 
