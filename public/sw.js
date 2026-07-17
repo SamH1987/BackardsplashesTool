@@ -6,7 +6,7 @@
    Writes made offline are queued by the app itself (see app.js) and synced
    when the connection returns. */
 
-const VERSION = 'spajobs-v3';
+const VERSION = 'spajobs-v4';
 const SHELL = [
   '/', '/index.html', '/app.js', '/styles.css',
   '/login.html', '/3d.html', '/3d.js',
@@ -47,18 +47,21 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // static + images: cache first, refresh in the background
+  // app shell (pages/scripts/styles) and images: NETWORK FIRST. Whenever
+  // there's a connection, the newest version wins - only falls back to the
+  // saved copy when the fetch genuinely fails (offline). The previous
+  // "cache first, refresh in background" approach relied on the background
+  // fetch finishing after the response was already sent, which browsers -
+  // phones especially - can cut short before it completes, leaving the
+  // cache stuck on an old version indefinitely with no way to self-heal.
   // (ignoreSearch so /3d.html?job=... hits the cached /3d.html)
   e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(hit => {
-      const refresh = fetch(req).then(res => {
-        if (res && res.ok) {
-          const clone = res.clone();
-          caches.open(VERSION + '-static').then(c => c.put(req, clone));
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || refresh;
-    })
+    fetch(req).then(res => {
+      if (res && res.ok) {
+        const clone = res.clone();
+        caches.open(VERSION + '-static').then(c => c.put(req, clone));
+      }
+      return res;
+    }).catch(() => caches.match(req, { ignoreSearch: true }))
   );
 });
