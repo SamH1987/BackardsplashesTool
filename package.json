@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Site survey, quoting and job management for a spa/pool installation business",
   "main": "server.js",
+  "engines": { "node": ">=20.0.0" },
   "scripts": {
     "start": "node server.js",
     "sample-images": "node scripts/make_sample_images.js"
