@@ -330,15 +330,32 @@ app.post('/api/jobs/:id/transcribe', async (req, res) => {
   if (process.env.DISABLE_TRANSCRIBE) {
     return err(res, 503, 'Transcription is not available on the hosted version (it needs more memory than the free server has). Type or paste the walkthrough notes instead, then use Sort transcript into notes.');
   }
+  let stagedPath = null;
   try {
     const { transcribe } = require('./lib/transcribe');
-    const text = await transcribe(path.join(storage.uploadsDir, job.survey.video.file));
+    // ffmpeg needs a real file on disk to read - in cloud mode the upload
+    // was already moved into Supabase storage, so pull it back down first.
+    const videoName = job.survey.video.file;
+    if (filestore.isCloud) {
+      const buf = await filestore.read('uploads', videoName);
+      if (!buf) return err(res, 404, 'The video could not be found in storage. Try uploading it again.');
+      stagedPath = path.join(storage.uploadsDir, 'transcribe_tmp_' + Date.now() + '_' + path.basename(videoName));
+      storage.ensureDir(path.dirname(stagedPath));
+      fs.writeFileSync(stagedPath, buf);
+    } else {
+      stagedPath = path.join(storage.uploadsDir, videoName);
+    }
+    const text = await transcribe(stagedPath);
     job.survey.video.transcript = text;
     job.survey.video.structuredNotes = structureNotes(text);
     storage.jobs.save(job);
     res.json(job.survey.video);
   } catch (e) {
     err(res, 500, 'Transcription did not work (' + e.message + '). You can type or paste the notes instead - the Structure Notes button still works on typed text.');
+  } finally {
+    if (stagedPath && filestore.isCloud) {
+      try { fs.unlinkSync(stagedPath); } catch (e) { /* temp file, fine either way */ }
+    }
   }
 });
 
