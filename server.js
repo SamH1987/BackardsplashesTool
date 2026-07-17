@@ -261,11 +261,13 @@ app.post('/api/jobs/:id/scan', upload.single('scan'), async (req, res) => {
   let scanFile = req.file.filename;
   if (/\.zip$/i.test(scanFile)) {
     try {
-      const { execSync } = require('child_process');
+      const unzipper = require('unzipper');
       const dir = 'scan_' + job.id + '_' + Date.now();
       const dirPath = path.join(storage.uploadsDir, dir);
-      execSync('unzip -o ' + JSON.stringify(path.join(storage.uploadsDir, scanFile)) + ' -d ' + JSON.stringify(dirPath), { stdio: 'ignore' });
-      fs.unlinkSync(path.join(storage.uploadsDir, scanFile));
+      const zipPath = path.join(storage.uploadsDir, scanFile);
+      const directory = await unzipper.Open.file(zipPath);
+      await directory.extract({ path: dirPath });
+      fs.unlinkSync(zipPath);
       // find the model inside - .glb first, else .gltf (textures sit alongside)
       const found = findModelFile(dirPath, dirPath);
       if (!found) return err(res, 400, 'No 3D model found inside that zip. In Polycam, export as GLTF (not raw data).');
