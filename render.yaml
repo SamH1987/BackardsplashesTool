@@ -1,18 +1,24 @@
-# Render blueprint: hosts Spa Jobs on the free tier.
-# Connect this repo at render.com and it reads this file automatically.
-# You then set the four secret environment variables in the Render dashboard.
+# Render blueprint for Spa Jobs. This file only sets the STARTING configuration
+# for a brand new service - once the service exists, Render remembers your
+# actual plan/env var choices from the dashboard and this file is only reread
+# if you delete and recreate the service. To change plan or env vars on an
+# existing service, do it in the Render dashboard, not here.
+#
+# Video transcription needs real memory to load the speech model - pick an
+# instance size with at least 2GB RAM (check Render's current plan list for
+# which tier that is; it changes over time) or transcription will crash with
+# an out-of-memory error instead of working. Any paid plan removes the
+# free-tier sleep-after-15-minutes behaviour, regardless of its RAM size.
 services:
   - type: web
     name: spa-jobs
     runtime: node
     plan: free
-    buildCommand: npm install --omit=optional
+    buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /api/meta
     envVars:
       - key: CLOUD
-        value: "1"
-      - key: DISABLE_TRANSCRIBE
         value: "1"
       - key: DATABASE_URL # Supabase -> Connect -> Session pooler connection string
         sync: false
