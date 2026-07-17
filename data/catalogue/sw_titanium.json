@@ -5,11 +5,11 @@
   "name": "Titanium™ Spa",
   "type": "spa",
   "seats": "10",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 3,
+  "widthM": 2.3,
+  "heightM": 0.9,
   "image": "sw_titanium.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/titanium/",
   "createdAt": "2026-07-10T00:01:57.812Z",
-  "updatedAt": "2026-07-10T00:01:57.812Z"
+  "updatedAt": "2026-07-17T08:57:53.727Z"
 }

@@ -5,11 +5,11 @@
   "name": "TORNADO",
   "type": "spa",
   "seats": "10",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.1,
+  "widthM": 1.6,
+  "heightM": 0.9,
   "image": "js_cyclone-tornado.png",
   "sourceUrl": "https://justspas.com.au/product/cyclone-tornado/",
   "createdAt": "2026-07-10T00:03:21.693Z",
-  "updatedAt": "2026-07-10T00:03:21.693Z"
+  "updatedAt": "2026-07-17T08:56:34.183Z"
 }

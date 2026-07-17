@@ -5,11 +5,11 @@
   "name": "IKON™ Spa",
   "type": "spa",
   "seats": "6",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 3.64,
+  "widthM": 2.25,
+  "heightM": 0.9,
   "image": "sw_ikon-spa.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/ikon-spa/",
   "createdAt": "2026-07-10T00:02:02.482Z",
-  "updatedAt": "2026-07-10T00:02:02.482Z"
+  "updatedAt": "2026-07-17T08:57:52.870Z"
 }

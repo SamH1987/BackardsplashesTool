@@ -5,11 +5,11 @@
   "name": "TYPHOON",
   "type": "spa",
   "seats": "5",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.1,
+  "widthM": 1.6,
+  "heightM": 0.9,
   "image": "js_cyclone-typhoon.jpg",
   "sourceUrl": "https://justspas.com.au/product/cyclone-typhoon/",
   "createdAt": "2026-07-10T00:03:14.098Z",
-  "updatedAt": "2026-07-10T00:03:14.098Z"
+  "updatedAt": "2026-07-17T08:56:34.184Z"
 }

@@ -5,11 +5,11 @@
   "name": "TEMPEST",
   "type": "spa",
   "seats": "5",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.1,
+  "widthM": 1.6,
+  "heightM": 0.9,
   "image": "js_cyclone-tempest.jpg",
   "sourceUrl": "https://justspas.com.au/product/cyclone-tempest/",
   "createdAt": "2026-07-10T00:03:06.381Z",
-  "updatedAt": "2026-07-10T00:03:06.381Z"
+  "updatedAt": "2026-07-17T08:56:34.183Z"
 }

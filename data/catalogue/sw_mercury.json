@@ -5,11 +5,11 @@
   "name": "Mercury™ Spa",
   "type": "spa",
   "seats": "5",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": 0.82,
   "image": "sw_mercury.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/mercury/",
   "createdAt": "2026-07-10T00:01:55.652Z",
-  "updatedAt": "2026-07-10T00:01:55.652Z"
+  "updatedAt": "2026-07-17T08:57:53.157Z"
 }

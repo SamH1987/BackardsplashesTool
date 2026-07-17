@@ -5,11 +5,11 @@
   "name": "Fisher® 2™ Spa",
   "type": "spa",
   "seats": "2",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 1.65,
+  "widthM": 1.65,
+  "heightM": 0.74,
   "image": "sw_fisher-2.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/fisher/fisher-2/",
   "createdAt": "2026-07-10T00:01:58.789Z",
-  "updatedAt": "2026-07-10T00:01:58.789Z"
+  "updatedAt": "2026-07-17T08:57:50.115Z"
 }

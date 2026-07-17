@@ -5,11 +5,11 @@
   "name": "Cobalt™ Spa",
   "type": "spa",
   "seats": "5",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.15,
+  "widthM": 2.15,
+  "heightM": 0.92,
   "image": "sw_cobalt.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/cobalt/",
   "createdAt": "2026-07-10T00:01:57.172Z",
-  "updatedAt": "2026-07-10T00:01:57.172Z"
+  "updatedAt": "2026-07-17T08:57:49.263Z"
 }

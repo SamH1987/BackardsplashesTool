@@ -56,7 +56,8 @@ function parseDims(text) {
   if (!text) return null;
   let m = text.match(/(\d{3,4})\s*(?:\(L\))?\s*(?:mm)?\s*[x×]\s*(\d{3,4})\s*(?:\(W\))?\s*(?:mm)?\s*(?:[x×]\s*(\d{3,4})\s*(?:\(H\))?\s*)?mm/i);
   if (m) return { lengthM: +(m[1] / 1000).toFixed(2), widthM: +(m[2] / 1000).toFixed(2), heightM: m[3] ? +(m[3] / 1000).toFixed(2) : '' };
-  m = text.match(/(\d\.\d{1,2})\s*m?\s*[x×]\s*(\d\.\d{1,2})\s*m?\s*(?:[x×]\s*(\d\.\d{1,2})\s*)?m/i);
+  // \d* not \d - some pages write the height as ".92m" with no leading zero
+  m = text.match(/(\d*\.\d{1,2})\s*m?\s*[x×]\s*(\d*\.\d{1,2})\s*m?\s*(?:[x×]\s*(\d*\.\d{1,2})\s*)?m/i);
   if (m) return { lengthM: +m[1], widthM: +m[2], heightM: m[3] ? +m[3] : '' };
   return null;
 }

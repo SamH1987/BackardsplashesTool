@@ -5,11 +5,11 @@
   "name": "Fisher® 6E™ Spa",
   "type": "spa",
   "seats": "5",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.16,
+  "widthM": 2.16,
+  "heightM": 0.9,
   "image": "sw_fisher-6e.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/fisher/fisher-6e/",
   "createdAt": "2026-07-10T00:02:14.639Z",
-  "updatedAt": "2026-07-10T00:02:14.639Z"
+  "updatedAt": "2026-07-17T08:57:51.530Z"
 }

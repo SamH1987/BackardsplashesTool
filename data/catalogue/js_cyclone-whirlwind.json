@@ -5,11 +5,11 @@
   "name": "WHIRLWIND",
   "type": "spa",
   "seats": "6",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.1,
+  "widthM": 1.6,
+  "heightM": 0.9,
   "image": "js_cyclone-whirlwind.jpg",
   "sourceUrl": "https://justspas.com.au/product/cyclone-whirlwind/",
   "createdAt": "2026-07-10T00:03:11.396Z",
-  "updatedAt": "2026-07-10T00:03:11.396Z"
+  "updatedAt": "2026-07-17T08:56:34.184Z"
 }

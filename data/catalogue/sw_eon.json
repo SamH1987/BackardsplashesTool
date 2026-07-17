@@ -5,11 +5,11 @@
   "name": "Eon™ Spa",
   "type": "spa",
   "seats": "6",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2,
+  "widthM": 2,
+  "heightM": 0.82,
   "image": "sw_eon.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/eon/",
   "createdAt": "2026-07-10T00:01:55.055Z",
-  "updatedAt": "2026-07-10T00:01:55.055Z"
+  "updatedAt": "2026-07-17T08:57:49.548Z"
 }

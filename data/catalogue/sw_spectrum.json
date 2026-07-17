@@ -5,11 +5,11 @@
   "name": "Spectrum™ Spa",
   "type": "spa",
   "seats": "6",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.3,
+  "widthM": 2.3,
+  "heightM": 0.92,
   "image": "sw_spectrum.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/spectrum/",
   "createdAt": "2026-07-10T00:01:56.659Z",
-  "updatedAt": "2026-07-10T00:01:56.660Z"
+  "updatedAt": "2026-07-17T08:57:53.445Z"
 }

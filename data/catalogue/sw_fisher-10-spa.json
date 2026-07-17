@@ -5,11 +5,11 @@
   "name": "Fisher® 10™ Spa",
   "type": "spa",
   "seats": "10",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 3.5,
+  "widthM": 2.29,
+  "heightM": 0.91,
   "image": "sw_fisher-10-spa.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/fisher/fisher-10-spa/",
   "createdAt": "2026-07-10T00:02:09.666Z",
-  "updatedAt": "2026-07-10T00:02:09.666Z"
+  "updatedAt": "2026-07-17T08:57:49.831Z"
 }
