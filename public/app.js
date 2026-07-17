@@ -846,26 +846,9 @@ async function viewSurvey(jobId) {
   };
 
   // ---- video ----
-  $('#vid-add').onclick = () => $('#vid-file').click();
-  $('#vid-file').onchange = async () => {
-    const file = $('#vid-file').files[0];
-    if (!file) return;
-    const fd = new FormData(); fd.append('video', file);
-    $('#vid-status').textContent = 'Uploading video... keep this page open.';
-    try {
-      const res = await fetch('/api/jobs/' + jobId + '/video', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (!res.ok) { $('#vid-status').textContent = 'Upload failed.'; return toast(data.error || 'Upload failed', true); }
-      S.video.file = data.file;
-      $('#vid-status').textContent = 'Video on file: ' + data.file;
-      $('#vid-transcribe').disabled = false;
-      toast('Video uploaded');
-    } catch (e) {
-      $('#vid-status').textContent = 'No signal - the video stays in your camera roll. Upload it here when you are back in range.';
-      toast('No signal for the video - it is safe in your camera roll, upload later', true);
-    }
-  };
-  $('#vid-transcribe').onclick = async () => {
+  let transcribeEnabled = true;
+  async function runTranscribe() {
+    if (!transcribeEnabled) return;
     $('#vid-transcribe').disabled = true;
     $('#vid-status').textContent = 'Transcribing... first time can take several minutes (downloads the speech model once). Keep this page open.';
     try {
@@ -882,10 +865,35 @@ async function viewSurvey(jobId) {
       toast(e.message, true);
     }
     $('#vid-transcribe').disabled = false;
+  }
+  $('#vid-add').onclick = () => $('#vid-file').click();
+  $('#vid-file').onchange = async () => {
+    const file = $('#vid-file').files[0];
+    if (!file) return;
+    const fd = new FormData(); fd.append('video', file);
+    $('#vid-status').textContent = 'Uploading video... keep this page open.';
+    try {
+      const res = await fetch('/api/jobs/' + jobId + '/video', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) { $('#vid-status').textContent = 'Upload failed.'; return toast(data.error || 'Upload failed', true); }
+      S.video.file = data.file;
+      $('#vid-transcribe').disabled = false;
+      toast('Video uploaded');
+      if (transcribeEnabled) {
+        runTranscribe(); // starts automatically - no need to tap the button
+      } else {
+        $('#vid-status').textContent = 'Video on file: ' + data.file;
+      }
+    } catch (e) {
+      $('#vid-status').textContent = 'No signal - the video stays in your camera roll. Upload it here when you are back in range.';
+      toast('No signal for the video - it is safe in your camera roll, upload later', true);
+    }
   };
+  $('#vid-transcribe').onclick = runTranscribe;
   // hosted version has no transcription horsepower - grey the button honestly
   api('GET', '/api/meta').then(mt => {
     if (mt.transcribe === false) {
+      transcribeEnabled = false;
       const b = $('#vid-transcribe');
       b.disabled = true;
       b.textContent = 'Transcribe (not available on hosted version)';
