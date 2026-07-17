@@ -55,7 +55,7 @@ async function main() {
       data.id = id;
       await pool.query(
         'INSERT INTO records(collection, id, data) VALUES($1,$2,$3) ON CONFLICT (collection, id) DO UPDATE SET data=$3',
-        [coll, id, data]);
+        [coll, id, JSON.stringify(data)]);
       recCount++;
     }
     console.log('  ' + coll + ' done');
@@ -66,7 +66,7 @@ async function main() {
     const file = path.join(CONFIG, name);
     if (!fs.existsSync(file)) continue;
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-    await pool.query('INSERT INTO configs(name, data) VALUES($1,$2) ON CONFLICT (name) DO UPDATE SET data=$2', [name, data]);
+    await pool.query('INSERT INTO configs(name, data) VALUES($1,$2) ON CONFLICT (name) DO UPDATE SET data=$2', [name, JSON.stringify(data)]);
     console.log('  config ' + name + ' done');
   }
   await pool.end();
