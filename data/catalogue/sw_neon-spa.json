@@ -5,13 +5,13 @@
   "name": "Neon™ Spa",
   "type": "spa",
   "seats": "3",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 2.06,
+  "widthM": 1.69,
+  "heightM": 0.82,
   "image": "sw_neon-spa.png",
   "sourceUrl": "https://www.spaworld.com.au/spa-pools/vortex/neon-spa/",
   "createdAt": "2026-07-10T00:01:56.144Z",
-  "updatedAt": "2026-07-10T00:01:56.144Z",
+  "updatedAt": "2026-07-17T08:38:20.003Z",
   "docFile": "sw_neon-spa.pdf",
   "docSource": "Google Drive: SwimSpa's/Neon Specifications.pdf"
 }

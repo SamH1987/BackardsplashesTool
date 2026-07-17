@@ -5,13 +5,13 @@
   "name": "Fisher® Dual™ Swim Spa",
   "type": "swim spa",
   "seats": "7",
-  "lengthM": "",
-  "widthM": "",
-  "heightM": "",
+  "lengthM": 5.91,
+  "widthM": 2.3,
+  "heightM": 1.49,
   "image": "sw_fisher-dual.png",
   "sourceUrl": "https://www.spaworld.com.au/swim-spas/fisher/fisher-dual/",
   "createdAt": "2026-07-10T00:02:06.557Z",
-  "updatedAt": "2026-07-10T00:02:06.557Z",
+  "updatedAt": "2026-07-17T08:38:20.003Z",
   "docFile": "sw_fisher-dual.pdf",
   "docSource": "Google Drive: SwimSpa's/Fisher Dual.pdf"
 }

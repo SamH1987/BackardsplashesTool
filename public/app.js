@@ -1294,7 +1294,7 @@ async function openCataloguePicker(onPick) {
     if (!list.length) return '<p style="color:#fff;padding:20px">Nothing matches. The catalogue can be edited under Settings.</p>';
     return list.map(mo => `
       <div class="photo-card" data-pick="${esc(mo.id)}" style="cursor:pointer">
-        ${mo.image ? `<img src="/catalogue-images/${esc(mo.image)}" loading="lazy">` : '<div style="height:110px;background:#e5ebee"></div>'}
+        ${mo.image ? `<img src="/catalogue-images/${esc(mo.image)}" loading="lazy" style="object-fit:contain;background:#f2f4f5">` : '<div style="height:110px;background:#e5ebee"></div>'}
         <div class="pc-body">
           <b class="small">${esc(mo.name)}</b><br>
           <span class="small muted">${esc(mo.brand)} | ${esc(mo.type)}${mo.seats ? ' | ' + esc(mo.seats) + ' seats' : ''}<br>
@@ -1360,7 +1360,7 @@ async function viewCatalogue() {
       (!q || (mo.name + ' ' + mo.brand + ' ' + mo.type).toLowerCase().includes(q)));
     $('#cl-grid').innerHTML = list.map(mo => `
       <div class="photo-card">
-        ${mo.image ? `<img src="/catalogue-images/${esc(mo.image)}" loading="lazy">` : '<div style="height:110px;background:#e5ebee"></div>'}
+        ${mo.image ? `<img src="/catalogue-images/${esc(mo.image)}" loading="lazy" style="object-fit:contain;background:#f2f4f5">` : '<div style="height:110px;background:#e5ebee"></div>'}
         <div class="pc-body">
           <b class="small">${esc(mo.name)}</b><br>
           <span class="small muted">${esc(mo.brand)} | ${esc(mo.retailer)} | ${esc(mo.type)}</span>
