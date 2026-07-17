@@ -588,6 +588,7 @@ async function viewSurvey(jobId) {
       <button id="vid-transcribe" class="secondary" ${S.video.file ? '' : 'disabled'}>Transcribe video</button>
     </div>
     <p id="vid-status" class="small muted">${S.video.file ? 'Video on file: ' + esc(S.video.file) : 'No video yet.'}</p>
+    <div id="vid-player"></div>
     <label class="field"><span>Transcript (edit freely, or type notes here if you skip the video)</span>
       <textarea id="vid-transcript" rows="5">${esc(S.video.transcript)}</textarea></label>
     <button id="vid-structure" class="secondary">Sort transcript into notes below</button>
@@ -846,6 +847,16 @@ async function viewSurvey(jobId) {
   };
 
   // ---- video ----
+  function renderVideoPlayer() {
+    const box = $('#vid-player');
+    if (!S.video.file) { box.innerHTML = ''; return; }
+    const src = '/uploads/' + encodeURIComponent(S.video.file);
+    const isAudioOnly = /\.(mp3|m4a|aac|wav|aiff|aif)$/i.test(S.video.file);
+    box.innerHTML = isAudioOnly
+      ? `<audio controls src="${src}" style="width:100%;margin:8px 0"></audio>`
+      : `<video controls playsinline src="${src}" style="width:100%;max-height:360px;border-radius:10px;margin:8px 0;background:#000"></video>`;
+  }
+  renderVideoPlayer();
   let transcribeEnabled = true;
   async function runTranscribe() {
     if (!transcribeEnabled) return;
@@ -878,6 +889,7 @@ async function viewSurvey(jobId) {
       if (!res.ok) { $('#vid-status').textContent = 'Upload failed.'; return toast(data.error || 'Upload failed', true); }
       S.video.file = data.file;
       $('#vid-transcribe').disabled = false;
+      renderVideoPlayer();
       toast('Video uploaded');
       if (transcribeEnabled) {
         runTranscribe(); // starts automatically - no need to tap the button

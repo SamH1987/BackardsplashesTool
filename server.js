@@ -60,6 +60,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // File serving: straight off the disk locally; streamed out of the private
 // cloud bucket (behind the login) when hosted.
 if (filestore.isCloud) {
+  // Supports HTTP Range requests (206 partial content) so video/audio
+  // players can scrub and seek instead of needing the whole file up front.
   const serveArea = area => async (req, res) => {
     try {
       const name = decodeURIComponent(req.params[0] || '');
@@ -67,6 +69,23 @@ if (filestore.isCloud) {
       if (!buf) return res.status(404).end();
       res.setHeader('Content-Type', filestore.mimeFor(name));
       res.setHeader('Cache-Control', 'private, max-age=86400');
+      res.setHeader('Accept-Ranges', 'bytes');
+      const range = req.headers.range;
+      const m = range && range.match(/^bytes=(\d*)-(\d*)$/);
+      if (m) {
+        const total = buf.length;
+        let start = m[1] === '' ? 0 : parseInt(m[1], 10);
+        let end = m[2] === '' ? total - 1 : parseInt(m[2], 10);
+        if (isNaN(start) || isNaN(end) || start > end || start >= total) {
+          res.setHeader('Content-Range', 'bytes */' + total);
+          return res.status(416).end();
+        }
+        end = Math.min(end, total - 1);
+        res.status(206);
+        res.setHeader('Content-Range', 'bytes ' + start + '-' + end + '/' + total);
+        res.setHeader('Content-Length', end - start + 1);
+        return res.end(buf.slice(start, end + 1));
+      }
       res.send(buf);
     } catch (e) { res.status(400).end(); }
   };
