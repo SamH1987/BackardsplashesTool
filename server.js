@@ -461,8 +461,15 @@ app.post('/api/quotes', (req, res) => {
   if (!job) return err(res, 400, 'Job not found');
   if (!template) return err(res, 400, 'Template not found');
   const biz = storage.getConfig('business.json', {});
+  // Sequential quote number matching the founder's existing QU-0000 series -
+  // assigned once, at creation, and the counter never reused even if the
+  // quote is later deleted.
+  const nextNum = biz.nextQuoteNumber || 1;
+  const quoteNumber = (biz.quoteNumberPrefix || 'QU-') + String(nextNum).padStart(4, '0');
+  storage.saveConfig('business.json', { ...biz, nextQuoteNumber: nextNum + 1 });
   const quote = {
     id: storage.newId('quote'),
+    quoteNumber,
     jobId, templateId, templateName: template.name,
     status: 'draft',
     dates: { created: new Date().toISOString(), sent: null, accepted: null, declined: null },
@@ -541,6 +548,98 @@ app.get('/api/quotes/:id/pdf', (req, res) => {
   const job = storage.jobs.get(q.jobId);
   const customer = job && storage.customers.get(job.customerId);
   pdf.quotePdf(res, q, job || {}, customer);
+});
+
+// ---- Invoices -----------------------------------------------------------------
+// Matches the founder's real payment terms: 10% deposit / 80% on commencement /
+// 10% on completion. Three staged invoices are generated together from an
+// accepted quote's total (incl GST) and tracked/sent/paid independently.
+
+const INVOICE_STAGES = [
+  { stage: 'deposit', label: 'Deposit', percent: 10 },
+  { stage: 'progress', label: 'Progress Payment', percent: 80 },
+  { stage: 'final', label: 'Final Payment', percent: 10 }
+];
+
+app.get('/api/invoices', (req, res) => {
+  let list = storage.invoices.list();
+  if (req.query.jobId) list = list.filter(i => i.jobId === req.query.jobId);
+  if (req.query.quoteId) list = list.filter(i => i.quoteId === req.query.quoteId);
+  res.json(list);
+});
+
+app.get('/api/invoices/:id', (req, res) => {
+  const inv = storage.invoices.get(req.params.id);
+  if (!inv) return err(res, 404, 'Invoice not found');
+  res.json(inv);
+});
+
+app.post('/api/quotes/:id/invoices', (req, res) => {
+  const q = storage.quotes.get(req.params.id);
+  if (!q) return err(res, 404, 'Quote not found');
+  const existing = storage.invoices.list().filter(i => i.quoteId === q.id);
+  if (existing.length) return res.json(existing);
+  const job = storage.jobs.get(q.jobId);
+  const quoteTotal = quoteTotals(q).total;
+  const biz = storage.getConfig('business.json', {});
+  let nextNum = biz.nextInvoiceNumber || 1;
+  const created = [];
+  for (const s of INVOICE_STAGES) {
+    const total = Math.round(quoteTotal * (s.percent / 100) * 100) / 100;
+    const subtotal = Math.round((total / 1.1) * 100) / 100;
+    const gst = Math.round((total - subtotal) * 100) / 100;
+    const invoiceNumber = (biz.invoiceNumberPrefix || 'INV-') + String(nextNum).padStart(4, '0');
+    nextNum++;
+    const inv = {
+      id: storage.newId('invoice'),
+      invoiceNumber,
+      quoteId: q.id,
+      jobId: q.jobId,
+      stage: s.stage,
+      stageLabel: s.label,
+      percent: s.percent,
+      subtotal, gst, total,
+      quoteNumber: q.quoteNumber,
+      quoteTotal,
+      status: 'draft',
+      dueDate: '',
+      notes: '',
+      dates: { created: new Date().toISOString(), sent: null, paid: null },
+      createdAt: new Date().toISOString()
+    };
+    storage.invoices.save(inv);
+    created.push(inv);
+  }
+  storage.saveConfig('business.json', { ...biz, nextInvoiceNumber: nextNum });
+  res.json(created);
+});
+
+app.put('/api/invoices/:id', (req, res) => {
+  const inv = storage.invoices.get(req.params.id);
+  if (!inv) return err(res, 404, 'Invoice not found');
+  const allowed = ['dueDate', 'notes'];
+  for (const k of allowed) if (req.body[k] !== undefined) inv[k] = req.body[k];
+  storage.invoices.save(inv);
+  res.json(inv);
+});
+
+app.post('/api/invoices/:id/status', (req, res) => {
+  const inv = storage.invoices.get(req.params.id);
+  if (!inv) return err(res, 404, 'Invoice not found');
+  const status = (req.body || {}).status;
+  if (!['draft', 'sent', 'paid'].includes(status)) return err(res, 400, 'Unknown status');
+  inv.status = status;
+  inv.dates[status === 'draft' ? 'created' : status] = new Date().toISOString();
+  storage.invoices.save(inv);
+  res.json(inv);
+});
+
+app.get('/api/invoices/:id/pdf', (req, res) => {
+  const inv = storage.invoices.get(req.params.id);
+  if (!inv) return err(res, 404, 'Invoice not found');
+  const job = storage.jobs.get(inv.jobId);
+  const customer = job && storage.customers.get(job.customerId);
+  pdf.invoicePdf(res, inv, job || {}, customer);
 });
 
 // ---- Contractor specs ----------------------------------------------------------

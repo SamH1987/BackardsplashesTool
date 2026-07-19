@@ -185,6 +185,7 @@ const APPROVAL_LABELS = {
 };
 const TRADE_LABELS = { concrete: 'Concrete', plumbing: 'Plumbing', electrical: 'Electrical', excavation: 'Excavation', crane: 'Crane / lift', general: 'General works' };
 const QUOTE_STATUS_BADGE = { draft: '', sent: 'blue', accepted: 'green', declined: 'red' };
+const INVOICE_STATUS_BADGE = { draft: '', sent: 'blue', paid: 'green' };
 
 // ---------- router ----------
 window.addEventListener('hashchange', route);
@@ -197,6 +198,7 @@ async function route() {
   const navKey = parts[0] === '' || parts.length === 0 ? 'home'
     : ['jobs', 'job', 'quote', 'spec'].includes(parts[0]) ? 'jobs'
     : ['customers', 'customer'].includes(parts[0]) ? 'customers'
+    : ['invoices', 'invoice'].includes(parts[0]) ? 'invoices'
     : ['settings', 'templates', 'template', 'catalogue'].includes(parts[0]) ? 'settings' : 'home';
   const navEl = document.querySelector('[data-nav="' + navKey + '"]');
   if (navEl) navEl.classList.add('active');
@@ -210,6 +212,8 @@ async function route() {
     if (parts[0] === 'job') return viewJob(parts[1]);
     if (parts[0] === 'quote') return viewQuote(parts[1]);
     if (parts[0] === 'spec') return viewSpec(parts[1]);
+    if (parts[0] === 'invoices') return viewInvoices();
+    if (parts[0] === 'invoice') return viewInvoice(parts[1]);
     if (parts[0] === 'settings') return viewSettings();
     if (parts[0] === 'templates') return viewTemplates();
     if (parts[0] === 'catalogue') return viewCatalogue();
@@ -1469,6 +1473,7 @@ async function viewQuote(id) {
   const job = await api('GET', '/api/jobs/' + Q.jobId);
   const customers = await api('GET', '/api/customers');
   const c = customers.find(x => x.id === job.customerId) || {};
+  let invoices = (await api('GET', '/api/invoices?quoteId=' + Q.id)).sort((a, b) => (a.invoiceNumber || '').localeCompare(b.invoiceNumber || ''));
 
   function totals() {
     let sub = 0;
@@ -1519,6 +1524,13 @@ async function viewQuote(id) {
           <td><select data-sup="${i}">${[['us', 'We supply'], ['contractor', 'Contractor'], ['customer', 'Customer']].map(([v, l]) => `<option value="${v}" ${li.supplier === v ? 'selected' : ''}>${l}</option>`).join('')}</select></td>
           <td style="white-space:nowrap">${li.included !== false ? money((parseFloat(li.qty) || 0) * (parseFloat(li.unitPrice) || 0)) : '-'}</td>
           <td><button class="small-btn secondary" data-del="${i}">x</button></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="8">
+            <label class="field" style="margin:0"><span class="small muted">Description on the quote/invoice PDF (what the customer reads under this item)</span>
+              <textarea data-details="${i}" rows="2" style="width:100%">${esc(li.details || '')}</textarea></label>
+          </td>
         </tr>`).join('')}
       </tbody></table>
       <button id="li-add" class="small-btn secondary" style="margin-top:8px">+ Add extra item</button>
@@ -1533,6 +1545,32 @@ async function viewQuote(id) {
           <div class="grand">Total incl GST: ${money(t.total)}</div>
         </div>
       </div>
+    </div>
+
+    <div class="card"><h2>Invoices</h2>
+      ${invoices.length === 0 ? `
+        <p class="small muted">${Q.status === 'accepted'
+          ? 'Generate the deposit / progress / final invoices from this quote\'s total (10% / 80% / 10%, matching your payment terms).'
+          : 'Invoices can be generated once this quote is marked accepted.'}</p>
+        <button id="inv-generate" ${Q.status !== 'accepted' ? 'disabled' : ''}>Generate invoices</button>
+      ` : `
+        <table class="li-table"><thead><tr><th>Invoice</th><th>Stage</th><th>Amount</th><th>Status</th><th>Due date</th><th></th></tr></thead>
+        <tbody>
+        ${invoices.map((inv, i) => `
+          <tr>
+            <td>${esc(inv.invoiceNumber)}</td>
+            <td>${esc(inv.stageLabel)} (${inv.percent}%)</td>
+            <td>${money(inv.total)}</td>
+            <td><span class="badge ${INVOICE_STATUS_BADGE[inv.status]}">${inv.status}</span></td>
+            <td><input type="date" data-inv-due="${i}" value="${esc((inv.dueDate || '').slice(0, 10))}" style="width:140px"></td>
+            <td style="white-space:nowrap">
+              <a class="small-btn secondary" href="/api/invoices/${inv.id}/pdf" target="_blank">PDF</a>
+              ${inv.status === 'draft' ? `<button class="small-btn secondary" data-inv-send="${i}">Mark sent</button>` : ''}
+              ${inv.status === 'sent' ? `<button class="small-btn" data-inv-paid="${i}">Mark paid</button>` : ''}
+            </td>
+          </tr>`).join('')}
+        </tbody></table>
+      `}
     </div>
 
     <div class="card"><h2>Presentation & terms</h2>
@@ -1590,9 +1628,10 @@ async function viewQuote(id) {
     bind('data-unit', (el, i) => { Q.lineItems[i].unit = el.value; });
     bind('data-price', (el, i) => { Q.lineItems[i].unitPrice = el.value; render(); });
     bind('data-sup', (el, i) => { Q.lineItems[i].supplier = el.value; });
+    bind('data-details', (el, i) => { Q.lineItems[i].details = el.value; });
     document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { Q.lineItems.splice(+b.dataset.del, 1); render(); });
     $('#li-add').onclick = () => {
-      Q.lineItems.push({ code: 'EXTRA', description: '', trade: 'general', unit: 'each', qty: 1, unitPrice: 0, supplier: 'us', included: true, notes: '', prefillNote: '' });
+      Q.lineItems.push({ code: 'EXTRA', description: '', details: '', trade: 'general', unit: 'each', qty: 1, unitPrice: 0, supplier: 'us', included: true, notes: '', prefillNote: '' });
       render();
     };
     $('#q-scope').onchange = () => { Q.scopeDescription = $('#q-scope').value; };
@@ -1611,7 +1650,9 @@ async function viewQuote(id) {
       try {
         await saveQuote();
         const r = await api('POST', '/api/quotes/' + Q.id + '/status', { status });
-        Object.assign(Q, r); toast('Quote marked ' + status); render();
+        Object.assign(Q, r);
+        if (status === 'accepted') invoices = await api('POST', '/api/quotes/' + Q.id + '/invoices');
+        toast('Quote marked ' + status); render();
       } catch (e) {
         if (e.data && e.data.checkResults) { Q.checkResults = e.data.checkResults; renderChecks(e.data.checkResults); window.scrollTo({ top: 0, behavior: 'smooth' }); }
         toast(e.message, true);
@@ -1620,6 +1661,114 @@ async function viewQuote(id) {
     if ($('#q-send')) $('#q-send').onclick = setStatus('sent');
     if ($('#q-accept')) $('#q-accept').onclick = setStatus('accepted');
     if ($('#q-decline')) $('#q-decline').onclick = setStatus('declined');
+    if ($('#inv-generate')) $('#inv-generate').onclick = async () => {
+      invoices = await api('POST', '/api/quotes/' + Q.id + '/invoices');
+      toast('Invoices generated'); render();
+    };
+    document.querySelectorAll('[data-inv-due]').forEach(el => el.onchange = async () => {
+      const inv = invoices[+el.dataset.invDue];
+      inv.dueDate = el.value;
+      await api('PUT', '/api/invoices/' + inv.id, { dueDate: inv.dueDate });
+      toast('Due date saved');
+    });
+    document.querySelectorAll('[data-inv-send]').forEach(b => b.onclick = async () => {
+      const inv = invoices[+b.dataset.invSend];
+      Object.assign(inv, await api('POST', '/api/invoices/' + inv.id + '/status', { status: 'sent' }));
+      render();
+    });
+    document.querySelectorAll('[data-inv-paid]').forEach(b => b.onclick = async () => {
+      const inv = invoices[+b.dataset.invPaid];
+      Object.assign(inv, await api('POST', '/api/invoices/' + inv.id + '/status', { status: 'paid' }));
+      render();
+    });
+  }
+  render();
+}
+
+// ---------- Invoices ----------
+async function viewInvoices() {
+  const [invoices, jobs, customers] = await Promise.all([
+    api('GET', '/api/invoices'), api('GET', '/api/jobs'), api('GET', '/api/customers')
+  ]);
+  const jobById = {}; jobs.forEach(j => jobById[j.id] = j);
+  const custById = {}; customers.forEach(c => custById[c.id] = c);
+  const sorted = [...invoices].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  const outstanding = sorted.filter(i => i.status !== 'paid');
+
+  view().innerHTML = `
+  <div class="card"><h2>Invoices</h2>
+    <p class="small muted">${outstanding.length} outstanding, ${sorted.length} total. Generate invoices from an accepted quote's page.</p>
+    <table class="li-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Job</th><th>Stage</th><th>Amount</th><th>Status</th><th>Due</th><th></th></tr></thead>
+    <tbody>
+    ${sorted.map(inv => {
+      const job = jobById[inv.jobId] || {};
+      const cust = custById[job.customerId] || {};
+      return `<tr>
+        <td><a href="#/invoice/${inv.id}">${esc(inv.invoiceNumber)}</a></td>
+        <td>${esc(cust.name || '')}</td>
+        <td>${esc(job.title || '')}</td>
+        <td>${esc(inv.stageLabel)} (${inv.percent}%)</td>
+        <td>${money(inv.total)}</td>
+        <td><span class="badge ${INVOICE_STATUS_BADGE[inv.status]}">${inv.status}</span></td>
+        <td>${fmtD(inv.dueDate) || '-'}</td>
+        <td><a class="small-btn secondary" href="/api/invoices/${inv.id}/pdf" target="_blank">PDF</a></td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="8" class="muted">No invoices yet.</td></tr>'}
+    </tbody></table>
+  </div>`;
+}
+
+async function viewInvoice(id) {
+  const inv = await api('GET', '/api/invoices/' + id);
+  const job = await api('GET', '/api/jobs/' + inv.jobId);
+  const customers = await api('GET', '/api/customers');
+  const c = customers.find(x => x.id === job.customerId) || {};
+
+  function render() {
+    view().innerHTML = `
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">${esc(inv.invoiceNumber)} - ${esc(c.name)}</h2>
+        <span class="badge ${INVOICE_STATUS_BADGE[inv.status]}">${inv.status}</span>
+      </div>
+      <p class="muted small">${esc(inv.stageLabel)} (${inv.percent}%) | ${esc(job.title)} | Re: Quote ${esc(inv.quoteNumber || '')}</p>
+      <div class="row">
+        <a class="btn secondary" href="#/quote/${inv.quoteId}">Back to quote</a>
+        <a class="btn secondary" href="/api/invoices/${inv.id}/pdf" target="_blank">View PDF</a>
+        ${inv.status === 'draft' ? '<button id="i-send">Mark as sent</button>' : ''}
+        ${inv.status === 'sent' ? '<button id="i-paid">Mark as paid</button>' : ''}
+      </div>
+      <p class="small muted">Sent: ${fmtD(inv.dates.sent) || '-'} | Paid: ${fmtD(inv.dates.paid) || '-'}</p>
+    </div>
+
+    <div class="card"><h2>Amount</h2>
+      <div class="totals">
+        <div>Subtotal: ${money(inv.subtotal)}</div>
+        <div>GST: ${money(inv.gst)}</div>
+        <div class="grand">Amount due: ${money(inv.total)}</div>
+      </div>
+    </div>
+
+    <div class="card"><h2>Details</h2>
+      <label class="field"><span>Due date</span><input type="date" id="i-due" value="${esc((inv.dueDate || '').slice(0, 10))}"></label>
+      <label class="field"><span>Notes (printed on the PDF)</span><textarea id="i-notes" rows="3">${esc(inv.notes || '')}</textarea></label>
+      <button id="i-save">Save</button>
+    </div>`;
+
+    $('#i-due').onchange = () => { inv.dueDate = $('#i-due').value; };
+    $('#i-notes').onchange = () => { inv.notes = $('#i-notes').value; };
+    $('#i-save').onclick = async () => {
+      Object.assign(inv, await api('PUT', '/api/invoices/' + inv.id, { dueDate: inv.dueDate, notes: inv.notes }));
+      toast('Invoice saved');
+    };
+    if ($('#i-send')) $('#i-send').onclick = async () => {
+      Object.assign(inv, await api('POST', '/api/invoices/' + inv.id + '/status', { status: 'sent' }));
+      toast('Marked as sent'); render();
+    };
+    if ($('#i-paid')) $('#i-paid').onclick = async () => {
+      Object.assign(inv, await api('POST', '/api/invoices/' + inv.id + '/status', { status: 'paid' }));
+      toast('Marked as paid'); render();
+    };
   }
   render();
 }
@@ -1783,8 +1932,11 @@ async function viewSettings() {
 
   const bizFields = [
     ['businessName', 'Business name'], ['abn', 'ABN'], ['licenceNo', 'Pool builder licence number'],
-    ['phone', 'Phone'], ['email', 'Email'], ['address', 'Address / suburb'],
+    ['phone', 'Phone'], ['email', 'Email'], ['website', 'Website'], ['address', 'Address / suburb'],
     ['senderName', 'Your name (signs off customer texts)']
+  ];
+  const bankFields = [
+    ['bankAccountName', 'Account name'], ['bankBSB', 'BSB'], ['bankAccountNumber', 'Account number']
   ];
 
   view().innerHTML = `
@@ -1797,6 +1949,27 @@ async function viewSettings() {
     </div>
     <label class="field"><span>Default payment terms</span><textarea id="bz-terms" rows="3">${esc(biz.paymentTermsDefault)}</textarea></label>
     <button id="bz-save">Save business details</button>
+  </div>
+
+  <div class="card"><h2>Bank details</h2>
+    <p class="small muted">Printed on every quote/invoice PDF under Terms of Payment.</p>
+    ${bankFields.map(([k, l]) => `<label class="field"><span>${l}</span><input type="text" id="bz-${k}" value="${esc(biz[k])}"></label>`).join('')}
+    <button id="bz-bank-save">Save bank details</button>
+  </div>
+
+  <div class="card"><h2>Quote numbering</h2>
+    <div class="row">
+      <label class="field grow"><span>Prefix</span><input type="text" id="bz-quoteNumberPrefix" value="${esc(biz.quoteNumberPrefix || 'QU-')}"></label>
+      <label class="field grow"><span>Next quote number</span><input type="number" id="bz-nextQuoteNumber" value="${esc(biz.nextQuoteNumber || 1)}"></label>
+    </div>
+    <p class="small muted">Assigned once, when a quote is created (e.g. ${esc(biz.quoteNumberPrefix || 'QU-')}${String(biz.nextQuoteNumber || 1).padStart(4, '0')} next). Only change this if you need to match your existing numbering.</p>
+    <button id="bz-quotenum-save">Save quote numbering</button>
+  </div>
+
+  <div class="card"><h2>Legal / safety notes</h2>
+    <p class="small muted">Printed at the foot of every quote and invoice PDF.</p>
+    <label class="field"><span>Legal notes</span><textarea id="bz-legalNotesDefault" rows="6">${esc(biz.legalNotesDefault || '')}</textarea></label>
+    <button id="bz-legal-save">Save legal notes</button>
   </div>
 
   <div class="card"><h2>Price templates</h2>
@@ -1833,8 +2006,31 @@ async function viewSettings() {
     b.defaultMarginPercent = parseFloat($('#bz-margin').value) || 0;
     b.validityDaysDefault = parseInt($('#bz-validity').value) || 30;
     b.paymentTermsDefault = $('#bz-terms').value;
+    Object.assign(biz, b);
     await api('PUT', '/api/settings', { business: b });
     toast('Business details saved');
+  };
+  $('#bz-bank-save').onclick = async () => {
+    const b = { ...biz };
+    for (const [k] of bankFields) b[k] = $('#bz-' + k).value;
+    Object.assign(biz, b);
+    await api('PUT', '/api/settings', { business: b });
+    toast('Bank details saved');
+  };
+  $('#bz-quotenum-save').onclick = async () => {
+    const b = { ...biz };
+    b.quoteNumberPrefix = $('#bz-quoteNumberPrefix').value || 'QU-';
+    b.nextQuoteNumber = parseInt($('#bz-nextQuoteNumber').value) || 1;
+    Object.assign(biz, b);
+    await api('PUT', '/api/settings', { business: b });
+    toast('Quote numbering saved');
+  };
+  $('#bz-legal-save').onclick = async () => {
+    const b = { ...biz };
+    b.legalNotesDefault = $('#bz-legalNotesDefault').value;
+    Object.assign(biz, b);
+    await api('PUT', '/api/settings', { business: b });
+    toast('Legal notes saved');
   };
   $('#th-save').onclick = async () => {
     const days = {};
@@ -1930,6 +2126,13 @@ async function viewTemplate(id) {
         <td><select data-sup="${i}">${[['us', 'We supply'], ['contractor', 'Contractor'], ['customer', 'Customer']].map(([v, l]) => `<option value="${v}" ${li.supplier === v ? 'selected' : ''}>${l}</option>`).join('')}</select></td>
         <td><select data-pf="${i}">${PREFILLS.map(([v, l]) => `<option value="${v}" ${(li.prefill || '') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></td>
         <td><button class="small-btn secondary" data-del="${i}">x</button></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="7">
+          <label class="field" style="margin:0"><span class="small muted">Description on the quote/invoice PDF</span>
+            <textarea data-details="${i}" rows="2" style="width:100%">${esc(li.details || '')}</textarea></label>
+        </td>
       </tr>`).join('')}
       </tbody></table>
       <div class="row" style="margin-top:10px">
@@ -1948,8 +2151,9 @@ async function viewTemplate(id) {
     bind('data-price', (el, i) => T.lineItems[i].unitPrice = parseFloat(el.value) || 0);
     bind('data-sup', (el, i) => T.lineItems[i].supplier = el.value);
     bind('data-pf', (el, i) => T.lineItems[i].prefill = el.value || null);
+    bind('data-details', (el, i) => T.lineItems[i].details = el.value);
     document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { T.lineItems.splice(+b.dataset.del, 1); render(); });
-    $('#t-addli').onclick = () => { T.lineItems.push({ code: 'ITEM', description: '', trade: 'general', unit: 'each', defaultQty: 1, unitPrice: 0, supplier: 'us', prefill: null, notes: '' }); render(); };
+    $('#t-addli').onclick = () => { T.lineItems.push({ code: 'ITEM', description: '', details: '', trade: 'general', unit: 'each', defaultQty: 1, unitPrice: 0, supplier: 'us', prefill: null, notes: '' }); render(); };
     $('#t-save').onclick = async () => {
       T.name = $('#t-name').value; T.installType = $('#t-type').value; T.description = $('#t-desc').value;
       await api('PUT', '/api/templates/' + T.id, T);

@@ -1,9 +1,13 @@
-/* Spa Jobs - mobile-first, big touch targets, readable in sunlight. */
+/* Backyard Splashes Jobs - mobile-first, big touch targets, readable in sunlight.
+   Brand colours sampled directly from the real logo and quote PDFs. */
 * { box-sizing: border-box; }
 :root {
-  --blue: #0e5f76;
-  --blue-dark: #0a4557;
-  --bg: #f2f4f5;
+  --navy: #00497c;
+  --blue: #0f7fb0;
+  --blue-dark: #0a5a80;
+  --bright: #3cb9eb;
+  --cyan: #25d1ee;
+  --bg: #f2f7fa;
   --card: #ffffff;
   --line: #d7dde0;
   --text: #16232a;
@@ -21,11 +25,12 @@ html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
 main { max-width: 980px; margin: 0 auto; padding: 12px 12px 90px; }
 
 /* Top bar */
-.topbar { background: var(--blue); color: #fff; display: flex; align-items: center;
-  justify-content: space-between; padding: 10px 14px; position: sticky; top: 0; z-index: 20; flex-wrap: wrap; gap: 6px; }
-.brand { color: #fff; font-weight: 700; font-size: 18px; text-decoration: none; }
+.topbar { background: var(--navy); color: #fff; display: flex; align-items: center;
+  justify-content: space-between; padding: 8px 14px; position: sticky; top: 0; z-index: 20; flex-wrap: wrap; gap: 6px; }
+.brand { color: #fff; font-weight: 700; font-size: 18px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+.brand img { height: 34px; width: auto; display: block; }
 .topbar nav { display: flex; gap: 4px; flex-wrap: wrap; }
-.topbar nav a { color: #dceef4; text-decoration: none; padding: 8px 10px; border-radius: 8px; font-size: 15px; }
+.topbar nav a { color: #cdeaf8; text-decoration: none; padding: 8px 10px; border-radius: 8px; font-size: 15px; }
 .topbar nav a.active { background: var(--blue-dark); color: #fff; font-weight: 600; }
 
 /* Cards & layout */
