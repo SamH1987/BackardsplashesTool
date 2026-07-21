@@ -239,6 +239,7 @@ async function viewThisWeek() {
       <span class="small">${esc(a.action)} <span class="muted">(${esc(a.who)})</span></span></span>
       ${a.due ? `<a class="btn secondary small-btn" target="_blank" title="Add to Google Calendar" href="${gcalUrl(esc(a.customer) + ': ' + esc(a.action), a.due, 'Job: ' + esc(a.jobTitle))}">Calendar</a>` : ''}
       <span class="badge">${STAGE_LABELS[a.stage] || a.stage}</span>
+      <button class="small-btn secondary" data-del-job="${a.jobId}" title="Delete job">x</button>
     </div>`;
   }
   html += '</div>';
@@ -250,6 +251,7 @@ async function viewThisWeek() {
         <span class="badge red">${s.daysInStage} days</span>
         <span class="grow"><a class="title" href="#/job/${s.jobId}">${esc(s.customer)} - ${esc(s.jobTitle)}</a><br>
         <span class="small muted">In "${STAGE_LABELS[s.stage] || s.stage}" - your limit is ${s.threshold} days</span></span>
+        <button class="small-btn secondary" data-del-job="${s.jobId}" title="Delete job">x</button>
       </div>`;
     }
     html += '</div>';
@@ -263,6 +265,7 @@ async function viewThisWeek() {
   }
   html += '</div>';
   view().innerHTML = html;
+  wireJobDeletes(viewThisWeek);
 }
 
 function jobLine(j, c) {
@@ -270,7 +273,20 @@ function jobLine(j, c) {
     <span class="grow"><a class="title" href="#/job/${j.id}">${esc(c.name || '')} - ${esc(j.title)}</a><br>
     <span class="small muted">${esc(j.siteAddress || '')}</span></span>
     <span class="badge blue">${STAGE_LABELS[j.stage] || j.stage}</span>
+    <button class="small-btn secondary" data-del-job="${j.id}" title="Delete job">x</button>
   </div>`;
+}
+
+// Shared by every screen that lists jobs via action-lines or jobLine().
+// refresh is called after a successful delete so the list re-renders.
+function wireJobDeletes(refresh) {
+  document.querySelectorAll('[data-del-job]').forEach(b => b.onclick = async () => {
+    if (!confirm('Delete this job? This can\'t be undone - its quotes, specs and invoices go with it.')) return;
+    try {
+      await api('DELETE', '/api/jobs/' + b.dataset.delJob);
+      refresh();
+    } catch (e) { toast(e.message, true); }
+  });
 }
 
 // ---------- Jobs list ----------
@@ -287,6 +303,7 @@ async function viewJobs() {
   }
   if (!html) html = '<div class="card"><p class="muted">No jobs yet. Add a customer first, then start a job from their page.</p></div>';
   view().innerHTML = '<div class="row" style="margin-top:12px"><a class="btn" href="#/customers">+ New job (via customer)</a></div>' + html;
+  wireJobDeletes(viewJobs);
 }
 
 // ---------- Customers ----------
@@ -350,6 +367,7 @@ async function viewCustomer(id) {
     <button id="nj-save">Start job</button>
   </div>`;
   view().innerHTML = html;
+  wireJobDeletes(() => viewCustomer(id));
   $('#c-save').onclick = async () => {
     try {
       await api('PUT', '/api/customers/' + c.id, {

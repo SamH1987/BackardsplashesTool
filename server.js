@@ -208,6 +208,19 @@ app.put('/api/jobs/:id', (req, res) => {
   res.json(job);
 });
 
+app.delete('/api/jobs/:id', (req, res) => {
+  const job = storage.jobs.get(req.params.id);
+  if (!job) return err(res, 404, 'Job not found');
+  // Quotes/specs/invoices are looked up by jobId elsewhere in the app, so a
+  // dangling reference to a deleted job would 404 those pages - clean them
+  // up together rather than leaving orphans.
+  for (const q of storage.quotes.list().filter(x => x.jobId === req.params.id)) storage.quotes.remove(q.id);
+  for (const s of storage.specs.list().filter(x => x.jobId === req.params.id)) storage.specs.remove(s.id);
+  for (const i of storage.invoices.list().filter(x => x.jobId === req.params.id)) storage.invoices.remove(i.id);
+  storage.jobs.remove(req.params.id);
+  res.json({ ok: true });
+});
+
 // ---- Job documents: plans, engineering, anything worth keeping on the job ----
 
 app.post('/api/jobs/:id/documents', upload.single('file'), async (req, res) => {
