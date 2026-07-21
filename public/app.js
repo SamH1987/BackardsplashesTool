@@ -333,7 +333,10 @@ async function viewCustomer(id) {
     <label class="field"><span>Email</span><input type="email" id="c-email" value="${esc(c.email)}"></label>
     <label class="field"><span>Address</span><input type="text" id="c-address" value="${esc(c.address)}"></label>
     <label class="field"><span>Notes</span><textarea id="c-notes">${esc(c.notes)}</textarea></label>
-    <button id="c-save">Save details</button>
+    <div class="row">
+      <button id="c-save">Save details</button>
+      <button id="c-delete" class="danger" ${jobs.length ? 'disabled title="Has jobs on file - can\'t delete"' : ''}>Delete customer</button>
+    </div>
   </div>
   <div class="card"><h2>Jobs for this customer</h2>`;
   if (!jobs.length) html += '<p class="muted">No jobs yet.</p>';
@@ -354,6 +357,13 @@ async function viewCustomer(id) {
         address: $('#c-address').value, notes: $('#c-notes').value
       });
       toast('Saved');
+    } catch (e) { toast(e.message, true); }
+  };
+  $('#c-delete').onclick = async () => {
+    if (!confirm('Delete ' + c.name + '? This can\'t be undone.')) return;
+    try {
+      await api('DELETE', '/api/customers/' + c.id);
+      location.hash = '#/customers';
     } catch (e) { toast(e.message, true); }
   };
   $('#nj-save').onclick = async () => {
@@ -617,6 +627,9 @@ async function viewSurvey(jobId) {
 
   <div class="card"><h2>3D scan of the yard (optional)</h2>
     <p class="small muted">Scan the yard with Polycam or Scaniverse (5-10 careful minutes), export as <b>GLTF</b>, and upload the file here - the .zip Polycam gives you works as-is. The 3D view can then show the spa sitting in the customer's actual yard. Worth it on the big jobs; skip it on simple ones.</p>
+    <div class="row">
+      <a class="btn secondary" href="polycam://">Open Polycam to scan</a>
+    </div>
     <input type="file" id="scan-file" accept=".glb,.gltf,.zip" style="display:none">
     <div class="row">
       <button id="scan-add" class="secondary">${S.scan && S.scan.file ? 'Replace scan' : '+ Upload scan (.glb or Polycam .zip)'}</button>

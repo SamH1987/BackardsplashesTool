@@ -142,6 +142,17 @@ app.put('/api/customers/:id', (req, res) => {
   res.json(existing);
 });
 
+app.delete('/api/customers/:id', (req, res) => {
+  const existing = storage.customers.get(req.params.id);
+  if (!existing) return err(res, 404, 'Customer not found');
+  const jobCount = storage.jobs.list().filter(j => j.customerId === req.params.id).length;
+  if (jobCount > 0) {
+    return err(res, 409, 'This customer has ' + jobCount + ' job' + (jobCount === 1 ? '' : 's') + ' on file, so cannot be deleted.');
+  }
+  storage.customers.remove(req.params.id);
+  res.json({ ok: true });
+});
+
 // ---- Jobs -------------------------------------------------------------------
 
 const STAGES = ['lead', 'survey_done', 'quote_sent', 'accepted', 'contractors_booked', 'in_progress', 'complete', 'invoiced'];
