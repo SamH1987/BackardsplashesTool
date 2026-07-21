@@ -33,8 +33,9 @@ main { max-width: 980px; margin: 0 auto; padding: 16px 12px 90px; }
 .topbar { background: linear-gradient(120deg, var(--navy) 0%, var(--blue-dark) 100%); color: #fff;
   display: flex; align-items: center; justify-content: space-between; padding: 10px 16px;
   position: sticky; top: 0; z-index: 20; flex-wrap: wrap; gap: 6px; box-shadow: var(--shadow-topbar); }
-.brand { color: #fff; font-weight: 700; font-size: 18px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
-.brand img { height: 38px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+.brand { color: #fff; text-decoration: none; display: flex; align-items: center; gap: 9px; }
+.brand-icon { height: 30px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+.brand-text { font-weight: 800; font-size: 18px; letter-spacing: -.01em; white-space: nowrap; }
 .topbar nav { display: flex; gap: 4px; flex-wrap: wrap; }
 .topbar nav a { color: #d3ecf8; text-decoration: none; padding: 9px 12px; border-radius: 9px; font-size: 15px;
   font-weight: 500; transition: background .15s ease, color .15s ease; }
@@ -155,14 +156,16 @@ canvas.draw { background: #fff; border-radius: 8px; max-width: 100%; touch-actio
 /* Branded full-page moments (login) */
 .brand-hero { min-height: 100vh; display: flex; flex-direction: column; }
 .brand-hero .topbar { justify-content: center; }
-.brand-hero main { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 60px; }
+.brand-hero main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 60px; gap: 22px; }
 .brand-hero .card { width: 100%; max-width: 420px; margin: 0; }
+.hero-logo img { width: min(300px, 78vw); height: auto; filter: drop-shadow(0 6px 16px rgba(0,20,40,.22)); }
 .brand-wave { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 70px;
   object-fit: cover; z-index: 0; pointer-events: none; opacity: .95; }
 
 @media (max-width: 640px) {
   .topbar { padding: 8px 10px; }
-  .brand img { height: 30px; }
+  .brand-icon { height: 26px; }
+  .brand-text { font-size: 16px; }
   .topbar nav { margin-top: 2px; }
   .topbar nav a { padding: 8px 8px; font-size: 14px; }
   .li-table { display: block; overflow-x: auto; }
