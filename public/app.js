@@ -335,7 +335,7 @@ async function viewCustomer(id) {
     <label class="field"><span>Notes</span><textarea id="c-notes">${esc(c.notes)}</textarea></label>
     <div class="row">
       <button id="c-save">Save details</button>
-      <button id="c-delete" class="danger" ${jobs.length ? 'disabled title="Has jobs on file - can\'t delete"' : ''}>Delete customer</button>
+      <button id="c-delete" class="danger">Delete customer</button>
     </div>
   </div>
   <div class="card"><h2>Jobs for this customer</h2>`;
@@ -360,7 +360,10 @@ async function viewCustomer(id) {
     } catch (e) { toast(e.message, true); }
   };
   $('#c-delete').onclick = async () => {
-    if (!confirm('Delete ' + c.name + '? This can\'t be undone.')) return;
+    const warning = jobs.length
+      ? 'Delete ' + c.name + '? This can\'t be undone. They have ' + jobs.length + ' job' + (jobs.length === 1 ? '' : 's') + ' on file - those will stay, just without a linked customer.'
+      : 'Delete ' + c.name + '? This can\'t be undone.';
+    if (!confirm(warning)) return;
     try {
       await api('DELETE', '/api/customers/' + c.id);
       location.hash = '#/customers';
